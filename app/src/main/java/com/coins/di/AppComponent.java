@@ -4,6 +4,7 @@ import android.app.Application;
 
 import com.coins.CoinsApp;
 import com.coins.data.source.FxRatesRepositoryModule;
+import com.coins.utils.Schedulers.SchedulersModule;
 
 import javax.inject.Singleton;
 
@@ -19,6 +20,7 @@ import dagger.android.support.AndroidSupportInjectionModule;
 @Component(modules = {FxRatesRepositoryModule.class,
         ApplicationModule.class,
         ActivityBindingModule.class,
+        SchedulersModule.class,
         AndroidSupportInjectionModule.class})
 public interface AppComponent extends AndroidInjector<CoinsApp> {
 
