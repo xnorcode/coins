@@ -1,6 +1,7 @@
 package com.coins.data.source.remote;
 
 import com.coins.data.FxRates;
+import com.coins.data.Rate;
 import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonDeserializer;
 import com.google.gson.JsonElement;
@@ -8,8 +9,8 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
 
 import java.lang.reflect.Type;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -28,20 +29,19 @@ public class FxRatesJsonDeserializer implements JsonDeserializer<FxRates> {
         // get rates json object
         JsonObject ratesObj = root.get("rates").getAsJsonObject();
 
-        // initialize hashmap to store rates
-        Map<String, Double> ratesMap = new HashMap<>();
+        // initialize rates list
+        List<Rate> rates = new ArrayList<>();
 
         // get all key members from json object
         Set<String> keys = ratesObj.keySet();
 
         // iterate json object elements, store
-        // keys and values in ratesMap
+        // keys and values in list
         for (String key : keys) {
-            if (ratesMap.containsKey(key)) continue;
-            ratesMap.put(key, ratesObj.get(key).getAsDouble());
+            rates.add(new Rate(key, ratesObj.get(key).getAsDouble()));
         }
 
         // construct and return FxRates object
-        return new FxRates(root.get("base").getAsString(), root.get("date").getAsString(), ratesMap);
+        return new FxRates(root.get("base").getAsString(), root.get("date").getAsString(), rates);
     }
 }

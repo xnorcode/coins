@@ -1,6 +1,7 @@
 package com.coins.data.source;
 
 import com.coins.data.FxRates;
+import com.coins.data.Rate;
 import com.coins.data.source.remote.FxRatesApi;
 
 import org.junit.Before;
@@ -12,8 +13,8 @@ import org.mockito.Mockito;
 import org.mockito.junit.MockitoJUnit;
 import org.mockito.junit.MockitoRule;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.ArrayList;
+import java.util.List;
 
 import io.reactivex.subscribers.TestSubscriber;
 
@@ -37,8 +38,8 @@ public class FxRatesRepositoryTest {
     @Before
     public void setup() {
         // init rates
-        Map<String, Double> rates = new HashMap<>();
-        rates.put("USD", 1.05);
+        List<Rate> rates = new ArrayList<>();
+        rates.add(new Rate("USD", 1.05));
         mRates = new FxRates("EUR", "today", rates);
     }
 

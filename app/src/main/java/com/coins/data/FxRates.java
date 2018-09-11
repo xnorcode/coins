@@ -1,6 +1,6 @@
 package com.coins.data;
 
-import java.util.Map;
+import java.util.List;
 
 /**
  * Created by xnorcode on 07/09/2018.
@@ -13,9 +13,9 @@ public class FxRates {
     //@SerializedName("date")
     private String date;
 
-    private Map<String, Double> rates;
+    private List<Rate> rates;
 
-    public FxRates(String base, String date, Map<String, Double> rates) {
+    public FxRates(String base, String date, List<Rate> rates) {
         this.base = base;
         this.date = date;
         this.rates = rates;
@@ -37,11 +37,11 @@ public class FxRates {
         this.date = date;
     }
 
-    public Map<String, Double> getRates() {
+    public List<Rate> getRates() {
         return rates;
     }
 
-    public void setRates(Map<String, Double> rates) {
+    public void setRates(List<Rate> rates) {
         this.rates = rates;
     }
 }

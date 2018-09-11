@@ -1,6 +1,7 @@
 package com.coins.ui.main;
 
 import com.coins.data.FxRates;
+import com.coins.data.Rate;
 import com.coins.data.source.FxRatesRepository;
 import com.coins.utils.Schedulers.TestSchedulerProvider;
 
@@ -12,8 +13,8 @@ import org.mockito.Mockito;
 import org.mockito.junit.MockitoJUnit;
 import org.mockito.junit.MockitoRule;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.ArrayList;
+import java.util.List;
 
 import io.reactivex.Flowable;
 
@@ -43,8 +44,8 @@ public class MainPresenterTest {
         mPresenter.setView(mView);
 
         // set fake
-        Map<String, Double> rates = new HashMap<>();
-        rates.put("USD", 1.05);
+        List<Rate> rates = new ArrayList<>();
+        rates.add(new Rate("USD", 1.05));
         mRates = new FxRates("EUR", "today", rates);
     }
 
