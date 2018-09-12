@@ -1,7 +1,8 @@
-package com.coins.data.source.remote;
+package com.coins.data.source.remote.utils;
 
 import com.coins.data.FxRates;
 
+import retrofit2.Call;
 import retrofit2.http.GET;
 import retrofit2.http.Query;
 
@@ -19,6 +20,5 @@ public interface FxRatesApi {
      * @return Latest FxRates object with latest rates
      */
     @GET("latest")
-    FxRates getLatestFxRates(@Query("base") String base);
-
+    Call<FxRates> getLatestFxRates(@Query("base") String base);
 }

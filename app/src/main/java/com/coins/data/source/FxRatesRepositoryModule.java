@@ -1,7 +1,7 @@
 package com.coins.data.source;
 
-import com.coins.data.source.remote.FxRatesApi;
-import com.coins.data.source.remote.FxRatesApiClient;
+import com.coins.data.source.remote.ApiHelper;
+import com.coins.data.source.remote.RemoteDataSource;
 
 import javax.inject.Singleton;
 
@@ -16,7 +16,7 @@ public class FxRatesRepositoryModule {
 
     @Singleton
     @Provides
-    FxRatesApi provideRemoteDataSource() {
-        return FxRatesApiClient.getClient().create(FxRatesApi.class);
+    RemoteDataSource provideRemoteDataSource() {
+        return new ApiHelper();
     }
 }

@@ -1,7 +1,7 @@
 package com.coins.data.source;
 
 import com.coins.data.FxRates;
-import com.coins.data.source.remote.FxRatesApi;
+import com.coins.data.source.remote.RemoteDataSource;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -15,13 +15,13 @@ import io.reactivex.Flowable;
 @Singleton
 public class FxRatesRepository implements FxRatesDataSource {
 
-    private FxRatesApi mRemoteDataSource;
+    private RemoteDataSource mRemoteDataSource;
 
     private FxRates mCachedRates;
 
 
     @Inject
-    public FxRatesRepository(FxRatesApi remoteDataSource) {
+    public FxRatesRepository(RemoteDataSource remoteDataSource) {
         this.mRemoteDataSource = remoteDataSource;
     }
 
