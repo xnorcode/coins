@@ -7,8 +7,8 @@ import io.reactivex.Flowable;
 /**
  * Created by xnorcode on 09/09/2018.
  */
-public interface FxRatesDataSource {
+public interface DataSource {
 
-    Flowable<FxRates> getLatestFxRates(String base);
+    Flowable<FxRates> getLatestFxRatesFromApi(String base);
 
 }

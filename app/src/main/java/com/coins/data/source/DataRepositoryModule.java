@@ -12,7 +12,7 @@ import dagger.Provides;
  * Created by xnorcode on 09/09/2018.
  */
 @Module
-public class FxRatesRepositoryModule {
+public class DataRepositoryModule {
 
     @Singleton
     @Provides

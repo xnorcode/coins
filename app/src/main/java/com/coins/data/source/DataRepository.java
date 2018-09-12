@@ -13,7 +13,7 @@ import io.reactivex.Flowable;
  * Created by xnorcode on 09/09/2018.
  */
 @Singleton
-public class FxRatesRepository implements FxRatesDataSource {
+public class DataRepository implements DataSource {
 
     private RemoteDataSource mRemoteDataSource;
 
@@ -21,13 +21,13 @@ public class FxRatesRepository implements FxRatesDataSource {
 
 
     @Inject
-    public FxRatesRepository(RemoteDataSource remoteDataSource) {
+    public DataRepository(RemoteDataSource remoteDataSource) {
         this.mRemoteDataSource = remoteDataSource;
     }
 
 
     @Override
-    public Flowable<FxRates> getLatestFxRates(String base) {
+    public Flowable<FxRates> getLatestFxRatesFromApi(String base) {
         return Flowable.<FxRates>create(emitter -> {
 
             // execute network call
