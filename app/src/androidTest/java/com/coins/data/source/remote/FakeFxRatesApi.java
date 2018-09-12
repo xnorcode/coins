@@ -9,7 +9,7 @@ import java.util.List;
 /**
  * Created by xnorcode on 10/09/2018.
  */
-public class FakeFxRatesApi implements FxRatesApi {
+public class FakeFxRatesApi implements RemoteDataSource {
 
     @Override
     public FxRates getLatestFxRates(String base) {

@@ -2,7 +2,7 @@ package com.coins.data.source;
 
 import com.coins.data.FxRates;
 import com.coins.data.Rate;
-import com.coins.data.source.remote.FxRatesApi;
+import com.coins.data.source.remote.RemoteDataSource;
 
 import org.junit.Before;
 import org.junit.Rule;
@@ -13,6 +13,7 @@ import org.mockito.Mockito;
 import org.mockito.junit.MockitoJUnit;
 import org.mockito.junit.MockitoRule;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -29,7 +30,7 @@ public class FxRatesRepositoryTest {
     private FxRates mRates;
 
     @Mock
-    private FxRatesApi mRemoteDataSource;
+    private RemoteDataSource mRemoteDataSource;
 
     @InjectMocks
     private FxRatesRepository mRatesRepository;
@@ -46,17 +47,21 @@ public class FxRatesRepositoryTest {
 
     @Test
     public void getLatestFxRates() {
-        // make data available in remote data source
-        Mockito.when(mRemoteDataSource.getLatestFxRates("EUR")).thenReturn(mRates);
+        try {
+            // make data available in remote data source
+            Mockito.when(mRemoteDataSource.getLatestFxRates("EUR")).thenReturn(mRates);
 
-        // call method and subscribe
-        TestSubscriber<FxRates> testSubscriber = new TestSubscriber<>();
-        mRatesRepository.getLatestFxRates("EUR").subscribe(testSubscriber);
+            // call method and subscribe
+            TestSubscriber<FxRates> testSubscriber = new TestSubscriber<>();
+            mRatesRepository.getLatestFxRates("EUR").subscribe(testSubscriber);
 
-        // verify remote data source method called once
-        Mockito.verify(mRemoteDataSource).getLatestFxRates("EUR");
+            // verify remote data source method called once
+            Mockito.verify(mRemoteDataSource).getLatestFxRates("EUR");
 
-        // check results
-        testSubscriber.assertValue(mRates);
+            // check results
+            testSubscriber.assertValue(mRates);
+        } catch (IOException e){
+            e.printStackTrace();
+        }
     }
 }

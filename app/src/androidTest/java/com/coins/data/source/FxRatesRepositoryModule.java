@@ -1,7 +1,7 @@
 package com.coins.data.source;
 
 import com.coins.data.source.remote.FakeFxRatesApi;
-import com.coins.data.source.remote.FxRatesApi;
+import com.coins.data.source.remote.RemoteDataSource;
 
 import javax.inject.Singleton;
 
@@ -16,7 +16,7 @@ public class FxRatesRepositoryModule {
 
     @Singleton
     @Provides
-    FxRatesApi providesFxRatesApi() {
+    RemoteDataSource providesFxRatesApi() {
         return new FakeFxRatesApi();
     }
 
