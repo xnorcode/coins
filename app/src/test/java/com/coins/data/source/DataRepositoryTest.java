@@ -22,7 +22,7 @@ import io.reactivex.subscribers.TestSubscriber;
 /**
  * Created by xnorcode on 09/09/2018.
  */
-public class FxRatesRepositoryTest {
+public class DataRepositoryTest {
 
     @Rule
     public MockitoRule mockitoRule = MockitoJUnit.rule();
@@ -33,7 +33,7 @@ public class FxRatesRepositoryTest {
     private RemoteDataSource mRemoteDataSource;
 
     @InjectMocks
-    private FxRatesRepository mRatesRepository;
+    private DataRepository mDataRepository;
 
 
     @Before
@@ -49,14 +49,14 @@ public class FxRatesRepositoryTest {
     public void getLatestFxRates() {
         try {
             // make data available in remote data source
-            Mockito.when(mRemoteDataSource.getLatestFxRates("EUR")).thenReturn(mRates);
+            Mockito.when(mRemoteDataSource.getLatestFxRatesFromApi("EUR")).thenReturn(mRates);
 
             // call method and subscribe
             TestSubscriber<FxRates> testSubscriber = new TestSubscriber<>();
-            mRatesRepository.getLatestFxRates("EUR").subscribe(testSubscriber);
+            mDataRepository.getLatestFxRates("EUR").subscribe(testSubscriber);
 
             // verify remote data source method called once
-            Mockito.verify(mRemoteDataSource).getLatestFxRates("EUR");
+            Mockito.verify(mRemoteDataSource).getLatestFxRatesFromApi("EUR");
 
             // check results
             testSubscriber.assertValue(mRates);
