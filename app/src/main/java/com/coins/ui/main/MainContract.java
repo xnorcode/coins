@@ -13,11 +13,19 @@ public interface MainContract {
 
 
         /**
+         * User requests for new currency rates
+         *
+         * @param base The base currency
+         */
+        void refreshRates(String base);
+
+
+        /**
          * Show updated FxRates on screen
          *
          * @param rates The updated FxRates
          */
-        void refreshRates(FxRates rates);
+        void showRates(FxRates rates);
 
 
         /**
