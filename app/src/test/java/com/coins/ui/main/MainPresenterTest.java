@@ -3,7 +3,7 @@ package com.coins.ui.main;
 import com.coins.data.FxRates;
 import com.coins.data.Rate;
 import com.coins.data.source.DataRepository;
-import com.coins.utils.Schedulers.TestSchedulerProvider;
+import com.coins.utils.schedulers.TestSchedulerProvider;
 
 import org.junit.Before;
 import org.junit.Rule;

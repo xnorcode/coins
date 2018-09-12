@@ -1,4 +1,4 @@
-package com.coins.utils.Schedulers;
+package com.coins.utils.schedulers;
 
 import io.reactivex.Scheduler;
 

@@ -1,7 +1,7 @@
 package com.coins.ui.main;
 
 import com.coins.data.source.DataRepository;
-import com.coins.utils.Schedulers.BaseSchedulersProvider;
+import com.coins.utils.schedulers.BaseSchedulersProvider;
 
 import javax.inject.Inject;
 

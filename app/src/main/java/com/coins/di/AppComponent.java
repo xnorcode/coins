@@ -4,7 +4,7 @@ import android.app.Application;
 
 import com.coins.CoinsApp;
 import com.coins.data.source.DataRepositoryModule;
-import com.coins.utils.Schedulers.SchedulersModule;
+import com.coins.utils.schedulers.SchedulersModule;
 
 import javax.inject.Singleton;
 
