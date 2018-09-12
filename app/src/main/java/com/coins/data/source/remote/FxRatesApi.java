@@ -18,7 +18,7 @@ public interface FxRatesApi {
      * @param base String of base currency
      * @return Latest FxRates object with latest rates
      */
-    @GET("/latest")
+    @GET("latest")
     FxRates getLatestFxRates(@Query("base") String base);
 
 }
