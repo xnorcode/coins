@@ -34,7 +34,7 @@ public class MainPresenter implements MainContract.Presenter {
         Disposable disposable = mFxRatesRepository.getLatestFxRates(base)
                 .subscribeOn(mSchedulersProvider.io())
                 .observeOn(mSchedulersProvider.ui())
-                .subscribe(rates -> mView.refreshRates(rates),
+                .subscribe(rates -> mView.showRates(rates),
                         throwable -> mView.showError());
         mCompositeDisposable.add(disposable);
     }
