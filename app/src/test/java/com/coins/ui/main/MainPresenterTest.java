@@ -59,6 +59,6 @@ public class MainPresenterTest {
         mPresenter.getLatestFxRates("EUR");
 
         // validate View got the response data
-        Mockito.verify(mView).refreshRates(mRates);
+        Mockito.verify(mView).showRates(mRates);
     }
 }
