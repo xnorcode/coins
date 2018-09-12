@@ -1,6 +1,6 @@
 package com.coins.ui.main;
 
-import com.coins.data.source.FxRatesRepository;
+import com.coins.data.source.DataRepository;
 import com.coins.utils.Schedulers.BaseSchedulersProvider;
 
 import javax.inject.Inject;
@@ -15,7 +15,7 @@ public class MainPresenter implements MainContract.Presenter {
 
     private MainContract.View mView;
 
-    private FxRatesRepository mFxRatesRepository;
+    private DataRepository mDataRepository;
 
     private CompositeDisposable mCompositeDisposable;
 
@@ -23,15 +23,15 @@ public class MainPresenter implements MainContract.Presenter {
 
 
     @Inject
-    public MainPresenter(FxRatesRepository fxRatesRepository, BaseSchedulersProvider schedulersProvider) {
-        this.mFxRatesRepository = fxRatesRepository;
+    public MainPresenter(DataRepository dataRepository, BaseSchedulersProvider schedulersProvider) {
+        this.mDataRepository = dataRepository;
         this.mSchedulersProvider = schedulersProvider;
         this.mCompositeDisposable = new CompositeDisposable();
     }
 
     @Override
     public void getLatestFxRates(String base) {
-        Disposable disposable = mFxRatesRepository.getLatestFxRates(base)
+        Disposable disposable = mDataRepository.getLatestFxRates(base)
                 .subscribeOn(mSchedulersProvider.io())
                 .observeOn(mSchedulersProvider.ui())
                 .subscribe(rates -> mView.showRates(rates),
