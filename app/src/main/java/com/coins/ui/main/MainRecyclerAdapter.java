@@ -72,19 +72,22 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
         String name = position > 0 ? mRates.getRates().get(--position).getName() : mRates.getBase();
         double rate = position > 0 ? mRates.getRates().get(--position).getRate() : 1;
 
-        // pass data to view
+        // set icon
         int drawableId = holder.itemView.getContext()
                 .getResources()
                 .getIdentifier(!name.equals("TRY") ? name.toLowerCase() : "turkey", "drawable", "com.coins");
         Picasso.get().load(drawableId).into(holder.mIcon);
 
+        // set name
         holder.mName.setText(name);
 
+        // set description
         int descId = holder.itemView.getContext()
                 .getResources()
                 .getIdentifier(name, "string", "com.coins");
         holder.mDescription.setText(holder.itemView.getContext().getResources().getString(descId));
 
+        // set rate
         holder.mRate.setText(String.valueOf(rate));
     }
 
