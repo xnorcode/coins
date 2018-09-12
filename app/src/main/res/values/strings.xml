@@ -1,3 +1,43 @@
 <resources>
+    // App title
     <string name="app_name">coins</string>
+
+    // Error Msg
+    <string name="error.msg">There was an error. Please check your are connected to the internet.</string>
+
+    <!-- Currency Description -->
+    <string name="AUD">Australian Dollar</string>
+    <string name="BGN">Bulgarian Lev</string>
+    <string name="BRL">Brazilian Real</string>
+    <string name="CAD">Canadian Dollar</string>
+    <string name="CHF">Swiss Franc</string>
+    <string name="CNY">Chinese Yuan</string>
+    <string name="CZK">Czech Koruna</string>
+    <string name="DKK">Danish Krone</string>
+    <string name="EUR">Euro</string>
+    <string name="GBP">British Pound</string>
+    <string name="HKD">Hong Kong Dollar</string>
+    <string name="HRK">Croatian Kuna</string>
+    <string name="HUF">Hungarian Forint</string>
+    <string name="IDR">Indonesia Rupiah</string>
+    <string name="ILS">Israeli Shekel</string>
+    <string name="INR">Indian Rupee</string>
+    <string name="ISK">Icelandic Krona</string>
+    <string name="JPY">Japanese Yen</string>
+    <string name="KRW">South Korean Won</string>
+    <string name="MXN">Mexican Peso</string>
+    <string name="MYR">Malaysian Ringgit</string>
+    <string name="NOK">Norwegian Krone</string>
+    <string name="NZD">New Zealand Dollar</string>
+    <string name="PHP">Philippine Piso</string>
+    <string name="PLN">Polish Zloty</string>
+    <string name="RON">Romanian Leu</string>
+    <string name="RUB">Russian Ruble</string>
+    <string name="SEK">Swedish Krona</string>
+    <string name="SGD">Singapore Dollar</string>
+    <string name="THB">Thai Baht</string>
+    <string name="TRY">Turkish Lira</string>
+    <string name="USD">United States Dollar</string>
+    <string name="ZAR">South African Rand</string>
+
 </resources>
