@@ -3,7 +3,7 @@ package com.coins.di;
 import android.app.Application;
 
 import com.coins.CoinsApp;
-import com.coins.data.source.FxRatesRepositoryModule;
+import com.coins.data.source.DataRepositoryModule;
 import com.coins.utils.Schedulers.SchedulersModule;
 
 import javax.inject.Singleton;
@@ -17,7 +17,7 @@ import dagger.android.support.AndroidSupportInjectionModule;
  * Created by xnorcode on 09/09/2018.
  */
 @Singleton
-@Component(modules = {FxRatesRepositoryModule.class,
+@Component(modules = {DataRepositoryModule.class,
         ApplicationModule.class,
         ActivityBindingModule.class,
         SchedulersModule.class,
