@@ -69,8 +69,7 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
         if (mRates == null || mRates.getRates() == null) return;
 
         // get data
-        String name = position > 0 ? mRates.getRates().get(--position).getName() : mRates.getBase();
-        double rate = position > 0 ? mRates.getRates().get(--position).getRate() : 1;
+        String name = mRates.getRates().get(position).getName();
 
         // set icon
         int drawableId = holder.itemView.getContext()
@@ -88,13 +87,12 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
         holder.mDescription.setText(holder.itemView.getContext().getResources().getString(descId));
 
         // set rate
-        holder.mRate.setText(String.valueOf(rate));
+        holder.mRate.setText(String.valueOf(mRates.getRates().get(position).getRate()));
     }
 
     @Override
     public int getItemCount() {
         if (mRates == null || mRates.getRates() == null || mRates.getRates().size() == 0) return 0;
-        // including the base currency with the plus 1
-        return mRates.getRates().size() + 1;
+        return mRates.getRates().size();
     }
 }

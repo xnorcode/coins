@@ -35,6 +35,9 @@ public class FxRatesJsonDeserializer implements JsonDeserializer<FxRates> {
         // get all key members from json object
         Set<String> keys = ratesObj.keySet();
 
+        // Add base currency rate in list position 0
+        rates.add(new Rate(root.get("base").getAsString(), 1));
+
         // iterate json object elements, store
         // keys and values in list
         for (String key : keys) {
