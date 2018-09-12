@@ -1,8 +1,8 @@
 package com.coins.data.source.remote;
 
 import com.coins.data.FxRates;
-import com.coins.data.source.remote.utils.FxRatesApi;
-import com.coins.data.source.remote.utils.FxRatesApiClient;
+import com.coins.data.source.remote.FxRatesApiUtils.FxRatesApi;
+import com.coins.data.source.remote.FxRatesApiUtils.FxRatesApiClient;
 
 import java.io.IOException;
 

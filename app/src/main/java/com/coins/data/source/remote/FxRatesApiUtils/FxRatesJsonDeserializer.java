@@ -1,4 +1,4 @@
-package com.coins.data.source.remote.utils;
+package com.coins.data.source.remote.FxRatesApiUtils;
 
 import com.coins.data.FxRates;
 import com.coins.data.Rate;
