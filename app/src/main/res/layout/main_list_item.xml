@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <ImageView
+        android:id="@+id/list_item_icon"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:layout_gravity="center_vertical"/>
+
+    <TextView
+        android:id="@+id/list_item_name"
+        android:layout_width="160dp"
+        android:layout_height="30dp"
+        android:layout_marginLeft="46dp"
+        android:layout_marginStart="46dp"
+        android:text="GBP"
+        android:textAppearance="@style/TextAppearance.AppCompat.Title"/>
+
+    <TextView
+        android:id="@+id/list_item_description"
+        android:layout_width="160dp"
+        android:layout_height="20dp"
+        android:layout_marginLeft="46dp"
+        android:layout_marginStart="46dp"
+        android:layout_marginTop="30dp"
+        android:text="British Pound"
+        android:textAppearance="@style/Base.TextAppearance.AppCompat.Body1"/>
+
+    <EditText
+        android:id="@+id/list_item_rate"
+        android:layout_width="80dp"
+        android:layout_height="30dp"
+        android:layout_gravity="end|center_vertical"
+        android:inputType="numberDecimal"/>
+
+</FrameLayout>
