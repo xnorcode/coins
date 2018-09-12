@@ -16,7 +16,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
  */
 public class FxRatesApiClient {
 
-    private static final String BASE_URL = "https://revolut.duckdns.org";
+    private static final String BASE_URL = "https://revolut.duckdns.org/";
 
     private static Retrofit retrofit = null;
 
