@@ -3,6 +3,8 @@ package com.coins.ui.main;
 import com.coins.data.source.DataRepository;
 import com.coins.utils.schedulers.BaseSchedulersProvider;
 
+import java.util.concurrent.TimeUnit;
+
 import javax.inject.Inject;
 
 import io.reactivex.disposables.CompositeDisposable;
@@ -34,6 +36,7 @@ public class MainPresenter implements MainContract.Presenter {
         Disposable disposable = mDataRepository.getLatestFxRates(base)
                 .subscribeOn(mSchedulersProvider.io())
                 .observeOn(mSchedulersProvider.ui())
+                .repeatWhen(completed -> completed.delay(1, TimeUnit.SECONDS))
                 .subscribe(rates -> mView.showRates(rates),
                         throwable -> mView.showError());
         mCompositeDisposable.add(disposable);
