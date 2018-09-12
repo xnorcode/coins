@@ -15,5 +15,5 @@ public interface RemoteDataSource {
      * @param base The base currency
      * @return The FxRates Object with the currency rates
      */
-    FxRates getLatestFxRates(String base) throws IOException;
+    FxRates getLatestFxRatesFromApi(String base) throws IOException;
 }

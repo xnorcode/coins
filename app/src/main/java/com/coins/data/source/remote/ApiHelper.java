@@ -19,7 +19,7 @@ public class ApiHelper implements RemoteDataSource {
 
 
     @Override
-    public FxRates getLatestFxRates(String base) throws IOException {
+    public FxRates getLatestFxRatesFromApi(String base) throws IOException {
         return FxRatesApiClient.getClient().create(FxRatesApi.class)
                 .getLatestFxRates(base)
                 .execute()

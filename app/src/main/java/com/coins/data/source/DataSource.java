@@ -9,6 +9,6 @@ import io.reactivex.Flowable;
  */
 public interface DataSource {
 
-    Flowable<FxRates> getLatestFxRatesFromApi(String base);
+    Flowable<FxRates> getLatestFxRates(String base);
 
 }

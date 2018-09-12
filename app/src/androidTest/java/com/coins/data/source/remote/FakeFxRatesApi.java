@@ -12,7 +12,7 @@ import java.util.List;
 public class FakeFxRatesApi implements RemoteDataSource {
 
     @Override
-    public FxRates getLatestFxRates(String base) {
+    public FxRates getLatestFxRatesFromApi(String base) {
         List<Rate> rates = new ArrayList<>();
         rates.add(new Rate("USD", 1.05));
         return new FxRates("EUR", "today", rates);

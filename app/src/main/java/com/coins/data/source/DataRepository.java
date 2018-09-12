@@ -27,11 +27,11 @@ public class DataRepository implements DataSource {
 
 
     @Override
-    public Flowable<FxRates> getLatestFxRatesFromApi(String base) {
+    public Flowable<FxRates> getLatestFxRates(String base) {
         return Flowable.<FxRates>create(emitter -> {
 
             // execute network call
-            FxRates rates = mRemoteDataSource.getLatestFxRates(base);
+            FxRates rates = mRemoteDataSource.getLatestFxRatesFromApi(base);
 
             if (rates != null) {
                 // cache response
