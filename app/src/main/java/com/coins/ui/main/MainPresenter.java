@@ -8,7 +8,6 @@ import java.util.concurrent.TimeUnit;
 import javax.inject.Inject;
 
 import io.reactivex.disposables.CompositeDisposable;
-import io.reactivex.disposables.Disposable;
 
 /**
  * Created by xnorcode on 11/09/2018.
@@ -33,13 +32,13 @@ public class MainPresenter implements MainContract.Presenter {
 
     @Override
     public void getLatestFxRates(String base) {
-        Disposable disposable = mDataRepository.getLatestFxRates(base)
+        if (mCompositeDisposable != null) mCompositeDisposable.clear();
+        mCompositeDisposable.add(mDataRepository.getLatestFxRates(base)
                 .subscribeOn(mSchedulersProvider.io())
                 .observeOn(mSchedulersProvider.ui())
                 .repeatWhen(completed -> completed.delay(1, TimeUnit.SECONDS))
                 .subscribe(rates -> mView.showRates(rates),
-                        throwable -> mView.showError());
-        mCompositeDisposable.add(disposable);
+                        throwable -> mView.showError()));
     }
 
     @Override
