@@ -11,16 +11,26 @@ import android.widget.TextView;
 
 import com.coins.R;
 import com.coins.data.FxRates;
+import com.jakewharton.rxbinding2.widget.RxTextView;
 import com.squareup.picasso.Picasso;
+
+import java.util.concurrent.TimeUnit;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.schedulers.Schedulers;
 
 /**
  * Created by xnorcode on 11/09/2018.
  */
 public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapter.ViewHolder> {
 
+
+    /**
+     * Custom ViewHolder for our list items
+     */
     class ViewHolder extends RecyclerView.ViewHolder {
 
         @BindView(R.id.list_item_icon)
@@ -43,17 +53,90 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
     }
 
 
+    /**
+     * List of updated rates
+     */
     private FxRates mRates;
 
 
-    public void swapData(FxRates rates) {
-        this.mRates = rates;
-        notifyDataSetChanged();
+    /**
+     * Initial base rate value
+     */
+    private double mBaseRate;
+
+
+    /**
+     * Flag to notify adapter that base currency has changed
+     */
+    private boolean mBaseCurrencyChanged;
+
+
+    /**
+     * Ref to the view
+     */
+    private MainContract.View mView;
+
+
+    /**
+     * Disposable for Base Rate Input Monitoring
+     */
+    private Disposable mDisposable;
+
+
+    /**
+     * Constructor
+     *
+     * @param mView Ref to the View
+     */
+    public MainRecyclerAdapter(MainContract.View mView) {
+        // get view ref
+        this.mView = mView;
+
+        // set initial base rate
+        this.mBaseRate = 100;
+
+        // set update base currency flag
+        this.mBaseCurrencyChanged = true;
     }
 
 
+    /**
+     * Update adapter data
+     *
+     * @param rates updated rates object
+     */
+    public void swapData(FxRates rates) {
+        // update rates list with updated rates
+        this.mRates = rates;
+
+        // set base rate value to the list
+        mRates.getRates().get(0).setRate(mBaseRate);
+
+        // update all only on each new base currency
+        if (mBaseCurrencyChanged) {
+
+            // reset flag
+            mBaseCurrencyChanged = false;
+
+            // update entire data set
+            notifyDataSetChanged();
+
+            return;
+        }
+
+        // update all except first item in list
+        notifyItemRangeChanged(1, getItemCount() - 1);
+    }
+
+
+    /**
+     * Release memory refs.
+     */
     public void destroy() {
         mRates = null;
+        mView = null;
+        if (mDisposable != null) mDisposable.dispose();
+        mDisposable = null;
     }
 
 
@@ -64,16 +147,20 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
         return new ViewHolder(view);
     }
 
+
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
+
+        // list null checks
         if (mRates == null || mRates.getRates() == null) return;
 
-        // get data
+        // get current item currency name
         String name = mRates.getRates().get(position).getName();
 
         // set icon
         int drawableId = holder.itemView.getContext()
                 .getResources()
+                // named the TRY icon resource as "turkey" to avoid system resource conflicts
                 .getIdentifier(!name.equals("TRY") ? name.toLowerCase() : "turkey", "drawable", "com.coins");
         Picasso.get().load(drawableId).into(holder.mIcon);
 
@@ -86,9 +173,44 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
                 .getIdentifier(name, "string", "com.coins");
         holder.mDescription.setText(holder.itemView.getContext().getResources().getString(descId));
 
-        // set rate
-        holder.mRate.setText(String.valueOf(mRates.getRates().get(position).getRate()));
+
+        // set rate value
+        if (position == 0) {
+
+            // set base value
+            holder.mRate.setText(String.valueOf(mBaseRate));
+
+            // set edit text change listener to update rates in list
+            mDisposable = RxTextView.textChangeEvents(holder.mRate)
+                    .filter(changes -> changes != null && !changes.text().toString().isEmpty())
+                    .debounce(200, TimeUnit.MILLISECONDS)
+                    .subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(rate -> {
+
+                        // get edited base rate
+                        mBaseRate = Double.parseDouble(rate.text().toString());
+
+                        // update all other items based on new base rate
+                        notifyItemRangeChanged(1, getItemCount() - 1);
+                    });
+        } else {
+
+            // set rate for currencies
+            holder.mRate.setText(String.valueOf(mBaseRate * mRates.getRates().get(position).getRate()));
+
+            // set current currency as a base currency
+            holder.itemView.setOnClickListener(v -> {
+
+                // request rates with new base currency
+                mView.refreshRates(name);
+
+                // notify adapter base currency changed
+                mBaseCurrencyChanged = true;
+            });
+        }
     }
+
 
     @Override
     public int getItemCount() {
