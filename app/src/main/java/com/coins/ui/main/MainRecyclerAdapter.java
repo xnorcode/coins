@@ -11,16 +11,17 @@ import android.widget.TextView;
 
 import com.coins.R;
 import com.coins.data.FxRates;
+import com.coins.utils.schedulers.BaseSchedulersProvider;
 import com.jakewharton.rxbinding2.widget.RxTextView;
 import com.squareup.picasso.Picasso;
 
 import java.util.concurrent.TimeUnit;
 
+import javax.inject.Inject;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
-import io.reactivex.schedulers.Schedulers;
 
 /**
  * Created by xnorcode on 11/09/2018.
@@ -72,6 +73,12 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
 
 
     /**
+     * Schedulers Provider
+     */
+    private BaseSchedulersProvider mSchedulersProvider;
+
+
+    /**
      * Ref to the view
      */
     private MainContract.View mView;
@@ -86,17 +93,29 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
     /**
      * Constructor
      *
-     * @param mView Ref to the View
+     * @param schedulersProvider Scheduler Provider
      */
-    public MainRecyclerAdapter(MainContract.View mView) {
-        // get view ref
-        this.mView = mView;
+    @Inject
+    public MainRecyclerAdapter(BaseSchedulersProvider schedulersProvider) {
+
+        //set schedulers provider
+        this.mSchedulersProvider = schedulersProvider;
 
         // set initial base rate
         this.mBaseRate = 100;
 
         // set update base currency flag
         this.mBaseCurrencyChanged = true;
+    }
+
+
+    /**
+     * Get view ref.
+     *
+     * @param mView Reference to view
+     */
+    public void setView(MainContract.View mView) {
+        this.mView = mView;
     }
 
 
@@ -137,6 +156,7 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
         mView = null;
         if (mDisposable != null) mDisposable.dispose();
         mDisposable = null;
+        mSchedulersProvider = null;
     }
 
 
@@ -184,8 +204,8 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
             mDisposable = RxTextView.textChangeEvents(holder.mRate)
                     .filter(changes -> changes != null && !changes.text().toString().isEmpty())
                     .debounce(200, TimeUnit.MILLISECONDS)
-                    .subscribeOn(Schedulers.io())
-                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribeOn(mSchedulersProvider.io())
+                    .observeOn(mSchedulersProvider.ui())
                     .subscribe(rate -> {
 
                         // get edited base rate
@@ -201,6 +221,9 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
 
             // set current currency as a base currency
             holder.itemView.setOnClickListener(v -> {
+
+                // null check
+                if (mView == null) return;
 
                 // request rates with new base currency
                 mView.refreshRates(name);
