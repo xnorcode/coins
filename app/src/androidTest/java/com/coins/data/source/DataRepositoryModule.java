@@ -12,11 +12,11 @@ import dagger.Provides;
  * Created by xnorcode on 10/09/2018.
  */
 @Module
-public class FxRatesRepositoryModule {
+public class DataRepositoryModule {
 
     @Singleton
     @Provides
-    RemoteDataSource providesFxRatesApi() {
+    RemoteDataSource provideRemoteDataSource() {
         return new FakeFxRatesApi();
     }
 

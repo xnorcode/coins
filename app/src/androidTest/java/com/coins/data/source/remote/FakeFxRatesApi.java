@@ -14,6 +14,7 @@ public class FakeFxRatesApi implements RemoteDataSource {
     @Override
     public FxRates getLatestFxRatesFromApi(String base) {
         List<Rate> rates = new ArrayList<>();
+        rates.add(new Rate("EUR", 1));
         rates.add(new Rate("USD", 1.16));
         rates.add(new Rate("GBP", 0.88));
         rates.add(new Rate("CHF", 1.12));
