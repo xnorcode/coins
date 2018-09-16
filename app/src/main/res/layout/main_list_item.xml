@@ -18,7 +18,6 @@
         android:layout_marginLeft="46dp"
         android:layout_marginStart="46dp"
         android:gravity="center_vertical"
-        android:text="GBP"
         android:textAppearance="@style/TextAppearance.AppCompat.Title"/>
 
     <TextView
@@ -29,7 +28,6 @@
         android:layout_marginStart="46dp"
         android:layout_marginTop="40dp"
         android:gravity="center_vertical"
-        android:text="British Pound"
         android:textAppearance="@style/Base.TextAppearance.AppCompat.Body1"/>
 
     <EditText
