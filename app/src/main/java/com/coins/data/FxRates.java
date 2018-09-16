@@ -7,10 +7,8 @@ import java.util.List;
  */
 public class FxRates {
 
-    //@SerializedName("base")
     private String base;
 
-    //@SerializedName("date")
     private String date;
 
     private List<Rate> rates;
