@@ -50,6 +50,9 @@ dependencies {
     implementation "io.reactivex.rxjava2:rxjava:$rootProject.rxjavaVersion"
     implementation "io.reactivex.rxjava2:rxandroid:$rootProject.rxandroidVersion"
 
+    // RxJava Bindings
+    implementation 'com.jakewharton.rxbinding2:rxbinding:2.1.1'
+
     // Dagger
     implementation "com.google.dagger:dagger:$rootProject.daggerVersion"
     implementation "com.google.dagger:dagger-android:$rootProject.daggerVersion"
