@@ -34,7 +34,6 @@ ext {
 
     // App Dependencies
     supportLibraryVersion = '27.1.1'
-    roomPersistenceVersion = '1.1.1'
     retrofitVersion = '2.4.0'
     rxjavaVersion = '2.2.2'
     rxandroidVersion = '2.1.0'
