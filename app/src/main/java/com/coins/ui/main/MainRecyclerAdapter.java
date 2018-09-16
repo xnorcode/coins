@@ -177,11 +177,13 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
         // get current item currency name
         String name = mRates.getRates().get(position).getName();
 
+        String packageName = holder.itemView.getContext().getApplicationContext().getPackageName();
+
         // set icon
         int drawableId = holder.itemView.getContext()
                 .getResources()
                 // named the TRY icon resource as "turkey" to avoid system resource conflicts
-                .getIdentifier(!name.equals("TRY") ? name.toLowerCase() : "turkey", "drawable", "com.coins");
+                .getIdentifier(!name.equals("TRY") ? name.toLowerCase() : "turkey", "drawable", packageName);
         Picasso.get().load(drawableId).into(holder.mIcon);
 
         // set name
@@ -190,7 +192,7 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
         // set description
         int descId = holder.itemView.getContext()
                 .getResources()
-                .getIdentifier(name, "string", "com.coins");
+                .getIdentifier(name, "string", packageName);
         holder.mDescription.setText(holder.itemView.getContext().getResources().getString(descId));
 
 
