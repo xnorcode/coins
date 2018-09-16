@@ -204,18 +204,21 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
 
             // set edit text change listener to update rates in list
             mDisposable = RxTextView.textChangeEvents(holder.mRate)
-                    .filter(changes -> changes != null && !changes.text().toString().isEmpty())
                     .debounce(200, TimeUnit.MILLISECONDS)
                     .subscribeOn(mSchedulersProvider.io())
                     .observeOn(mSchedulersProvider.ui())
                     .subscribe(rate -> {
 
                         // get edited base rate
-                        mBaseRate = Double.parseDouble(rate.text().toString());
+                        if (rate.text().length() == 0) {
+                            mBaseRate = 1;
+                        } else {
+                            mBaseRate = Double.parseDouble(rate.text().toString());
+                        }
 
                         // update all other items based on new base rate
                         notifyItemRangeChanged(1, getItemCount() - 1);
-                    });
+                    }, error -> mView.showError());
         } else {
 
             // set rate for currencies
