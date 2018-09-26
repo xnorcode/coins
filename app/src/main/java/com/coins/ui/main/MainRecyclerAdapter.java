@@ -183,7 +183,13 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
                         if (rate.text().length() == 0) {
                             mBaseRate = 1;
                         } else {
-                            mBaseRate = Double.parseDouble(rate.text().toString());
+                            try {
+                                mBaseRate = Double.parseDouble(rate.text().toString());
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                                mBaseRate = 1;
+                            }
+
                         }
 
                         // update all other items based on new base rate
