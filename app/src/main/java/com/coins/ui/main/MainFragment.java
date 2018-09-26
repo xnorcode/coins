@@ -63,10 +63,15 @@ public class MainFragment extends DaggerFragment implements MainContract.View {
     }
 
     @Override
-    public void onDestroy() {
-        super.onDestroy();
+    public void onStop() {
+        super.onStop();
 
         mPresenter.dropView();
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
 
         mPresenter = null;
 
