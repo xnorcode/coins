@@ -49,5 +49,49 @@ public interface MainContract {
          * @param base The base currency
          */
         void getLatestFxRates(String base);
+
+
+        /**
+         * Bind RecyclerView Row View in presenter
+         *
+         * @param position The current RecyclerView row item position
+         * @param rowView  RecyclerView row item view
+         */
+        void onBindRecyclerRowView(int position, RecyclerRowView rowView);
+    }
+
+    interface RecyclerRowView {
+
+
+        /**
+         * Set the icon
+         *
+         * @param iconName The name of the Icon
+         */
+        void setIcon(String iconName);
+
+
+        /**
+         * Set the name
+         *
+         * @param name The name of the currency
+         */
+        void setName(String name);
+
+
+        /**
+         * Set the description
+         *
+         * @param name The name of the currency
+         */
+        void setDescription(String name);
+
+
+        /**
+         * Set the rate
+         *
+         * @param rate The currency's rate
+         */
+        void setRate(String rate);
     }
 }
