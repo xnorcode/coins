@@ -44,9 +44,6 @@ public class MainFragment extends DaggerFragment implements MainContract.View {
         // set layout manager
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
-        // bind view in adapter
-        mAdapter.setView(this);
-
         // set adapter to recycler view
         mRecyclerView.setAdapter(mAdapter);
 
