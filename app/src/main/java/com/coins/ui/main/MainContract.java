@@ -38,6 +38,12 @@ public interface MainContract {
 
 
         /**
+         * Initialize Presenter
+         */
+        void init();
+
+
+        /**
          * Request to download latest FxRates
          *
          * @param base The base currency

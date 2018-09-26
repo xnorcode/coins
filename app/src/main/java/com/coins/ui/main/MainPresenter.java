@@ -31,6 +31,13 @@ public class MainPresenter implements MainContract.Presenter {
     }
 
     @Override
+    public void init() {
+
+        // get default EUR rates when app initializes
+        getLatestFxRates("EUR");
+    }
+
+    @Override
     public void getLatestFxRates(String base) {
         if (mCompositeDisposable != null) mCompositeDisposable.clear();
         mCompositeDisposable.add(mDataRepository.getLatestFxRates(base)

@@ -59,7 +59,7 @@ public class MainFragment extends DaggerFragment implements MainContract.View {
 
         mPresenter.setView(this);
 
-        mPresenter.getLatestFxRates("EUR");
+        mPresenter.init();
     }
 
     @Override
