@@ -5,9 +5,6 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.EditText;
-import android.widget.ImageView;
-import android.widget.TextView;
 
 import com.coins.R;
 import com.coins.data.FxRates;
@@ -19,39 +16,12 @@ import java.util.concurrent.TimeUnit;
 
 import javax.inject.Inject;
 
-import butterknife.BindView;
-import butterknife.ButterKnife;
 import io.reactivex.disposables.Disposable;
 
 /**
  * Created by xnorcode on 11/09/2018.
  */
-public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapter.ViewHolder> {
-
-
-    /**
-     * Custom ViewHolder for our list items
-     */
-    class ViewHolder extends RecyclerView.ViewHolder {
-
-        @BindView(R.id.list_item_icon)
-        ImageView mIcon;
-
-        @BindView(R.id.list_item_name)
-        TextView mName;
-
-        @BindView(R.id.list_item_description)
-        TextView mDescription;
-
-        @BindView(R.id.list_item_rate)
-        EditText mRate;
-
-        public ViewHolder(View itemView) {
-            super(itemView);
-
-            ButterKnife.bind(this, itemView);
-        }
-    }
+public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapterViewHolder> {
 
 
     /**
@@ -162,14 +132,14 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
 
     @NonNull
     @Override
-    public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public MainRecyclerAdapterViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.main_list_item, parent, false);
-        return new ViewHolder(view);
+        return new MainRecyclerAdapterViewHolder(view);
     }
 
 
     @Override
-    public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull MainRecyclerAdapterViewHolder holder, int position) {
 
         // list null checks
         if (mRates == null || mRates.getRates() == null) return;
