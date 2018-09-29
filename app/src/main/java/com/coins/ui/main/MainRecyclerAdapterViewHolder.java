@@ -50,10 +50,6 @@ public class MainRecyclerAdapterViewHolder extends RecyclerView.ViewHolder imple
 
     @Override
     public void setIcon(String iconName) {
-        // TODO: 27/09/2018 include below code in presenter method setIcon()
-        // named the TRY icon resource as "turkey" to avoid system resource conflicts
-        // Add the below line into presenter logic before passing the iconName to the view
-        // !name.equals("TRY") ? name.toLowerCase() : "turkey"
         Picasso.get()
                 .load(mResources.getIdentifier(iconName, "drawable", mPackageName))
                 .into(mIcon);
