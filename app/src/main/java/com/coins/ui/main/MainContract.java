@@ -1,6 +1,5 @@
 package com.coins.ui.main;
 
-import com.coins.data.FxRates;
 import com.coins.ui.base.BasePresenter;
 import com.coins.ui.base.BaseView;
 
@@ -23,9 +22,9 @@ public interface MainContract {
         /**
          * Show updated FxRates on screen
          *
-         * @param rates The updated FxRates
+         * @param all Flag for update all or first item
          */
-        void showRates(FxRates rates);
+        void showNewRates(boolean all);
 
 
         /**
@@ -58,6 +57,30 @@ public interface MainContract {
          * @param rowView  RecyclerView row item view
          */
         void onBindRecyclerRowView(int position, RecyclerRowView rowView);
+
+
+        /**
+         * Get Count of Currencies in list
+         *
+         * @return The list item count
+         */
+        int getCurrenciesCount();
+
+
+        /**
+         * Get the new base rate set by the user's input
+         *
+         * @param newRate The input string from the user
+         */
+        void setNewBaseRateFromUserInput(String newRate);
+
+
+        /**
+         * Switch base currencies
+         *
+         * @param position The position of the currency selected as a new base currency
+         */
+        void switchBaseCurrency(int position);
     }
 
     interface RecyclerRowView {

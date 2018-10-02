@@ -11,7 +11,6 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 
 import com.coins.R;
-import com.coins.data.FxRates;
 
 import javax.inject.Inject;
 
@@ -84,8 +83,13 @@ public class MainFragment extends DaggerFragment implements MainContract.View {
     }
 
     @Override
-    public void showRates(FxRates rates) {
-        mAdapter.swapData(rates);
+    public void showNewRates(boolean all) {
+        if (all) {
+            mAdapter.notifyDataSetChanged();
+        } else {
+            // update all except first item in list
+            mAdapter.notifyItemRangeChanged(1, mPresenter.getCurrenciesCount() - 1);
+        }
     }
 
     @Override
