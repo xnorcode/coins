@@ -5,6 +5,7 @@ import com.coins.data.Rate;
 import com.coins.data.source.DataRepository;
 import com.coins.utils.schedulers.TestSchedulerProvider;
 
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -56,9 +57,12 @@ public class MainPresenterTest {
         Mockito.when(mDataRepository.getLatestFxRates("EUR")).thenReturn(Flowable.just(mRates));
 
         // request data
-        mPresenter.getLatestFxRates("EUR");
+        mPresenter.init();
 
         // validate View got the response data
-        Mockito.verify(mView).showRates(mRates);
+        Mockito.verify(mView).showNewRates(true);
+
+        int expected = 1;
+        Assert.assertEquals(expected, mPresenter.getCurrenciesCount());
     }
 }
