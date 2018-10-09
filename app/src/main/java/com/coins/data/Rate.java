@@ -29,4 +29,25 @@ public class Rate {
     public void setRate(double rate) {
         this.rate = rate;
     }
+
+    @Override
+    public int hashCode() {
+        int result = 17;
+        result = 31 * result + name.hashCode();
+        result = 31 * result + (int) rate;
+        return result;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+
+        if (this == obj) return true;
+
+        if (obj == null || getClass() != obj.getClass()) return false;
+
+        Rate rate = (Rate) obj;
+
+        return rate.getName().equals(this.name)
+                && rate.getRate() == this.rate;
+    }
 }
