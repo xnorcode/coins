@@ -73,7 +73,8 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
                     .debounce(200, TimeUnit.MILLISECONDS)
                     .subscribeOn(mSchedulersProvider.io())
                     .observeOn(mSchedulersProvider.ui())
-                    .subscribe(rate -> mPresenter.setNewBaseRateFromUserInput(rate.text().toString()));
+                    .subscribe(rate -> mPresenter.setNewBaseRateFromUserInput(rate.text().toString()),
+                            throwable -> mPresenter.setNewBaseRateFromUserInput(null));
         } else {
             // switch base currency
             holder.itemView.setOnClickListener(v -> mPresenter.switchBaseCurrency(position));
