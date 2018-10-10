@@ -1,5 +1,6 @@
 package com.coins.data;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -12,6 +13,10 @@ public class FxRates {
     private String date;
 
     private List<Rate> rates;
+
+    public FxRates() {
+        rates = new ArrayList<>();
+    }
 
     public FxRates(String base, String date, List<Rate> rates) {
         this.base = base;
