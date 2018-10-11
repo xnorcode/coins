@@ -15,8 +15,8 @@
         android:id="@+id/list_item_name"
         android:layout_width="160dp"
         android:layout_height="40dp"
-        android:layout_marginLeft="46dp"
         android:layout_marginStart="46dp"
+        android:layout_marginLeft="46dp"
         android:gravity="center_vertical"
         android:textAppearance="@style/TextAppearance.AppCompat.Title"/>
 
@@ -24,8 +24,8 @@
         android:id="@+id/list_item_description"
         android:layout_width="160dp"
         android:layout_height="20dp"
-        android:layout_marginLeft="46dp"
         android:layout_marginStart="46dp"
+        android:layout_marginLeft="46dp"
         android:layout_marginTop="40dp"
         android:gravity="center_vertical"
         android:textAppearance="@style/Base.TextAppearance.AppCompat.Body1"/>
@@ -35,6 +35,7 @@
         android:layout_width="80dp"
         android:layout_height="match_parent"
         android:layout_gravity="end|center_vertical"
-        android:inputType="numberDecimal"/>
+        android:inputType="numberDecimal"
+        android:maxLength="7"/>
 
 </FrameLayout>
