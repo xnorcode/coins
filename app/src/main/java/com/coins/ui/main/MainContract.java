@@ -1,5 +1,7 @@
 package com.coins.ui.main;
 
+import android.support.v7.util.DiffUtil;
+
 import com.coins.ui.base.BasePresenter;
 import com.coins.ui.base.BaseView;
 
@@ -22,9 +24,9 @@ public interface MainContract {
         /**
          * Show updated FxRates on screen
          *
-         * @param all Flag for update all or first item
+         * @param diffResult Diff Result ref
          */
-        void showNewRates(boolean all);
+        void showNewRates(DiffUtil.DiffResult diffResult);
 
 
         /**

@@ -1,5 +1,7 @@
 package com.coins.ui.main;
 
+import android.support.v7.util.DiffUtil;
+
 import com.coins.data.FxRates;
 import com.coins.data.source.DataRepository;
 import com.coins.utils.schedulers.BaseSchedulersProvider;
@@ -29,7 +31,7 @@ public class MainPresenter implements MainContract.Presenter {
 
     private double mBaseRate;
 
-    private boolean mUpdateAll;
+    private static boolean mUpdating = false;
 
 
     @Inject
@@ -41,8 +43,8 @@ public class MainPresenter implements MainContract.Presenter {
         // set initial base rate
         this.mBaseRate = 100;
 
-        // set flag to update all the list items
-        this.mUpdateAll = true;
+        // init cache
+        this.mCachedRates = new FxRates();
     }
 
     @Override
@@ -57,30 +59,35 @@ public class MainPresenter implements MainContract.Presenter {
         if (mCompositeDisposable != null) mCompositeDisposable.clear();
         mCompositeDisposable.add(mDataRepository.getLatestFxRates(base)
                 .subscribeOn(mSchedulersProvider.io())
-                .observeOn(mSchedulersProvider.ui())
                 .repeatWhen(completed -> completed.delay(1, TimeUnit.SECONDS))
-                .subscribe(rates -> {
-                    // TODO: 29/09/2018 use DiffUtil for changes here (in the background thread)
-                    // replace all below code by using DiffUtil
+                .map(rates -> {
 
-                    // set new rates
-                    mCachedRates = rates;
+                    // set base rate value to new list
+                    if (rates.getRates().size() > 0) rates.getRates().get(0).setRate(mBaseRate);
 
-                    // set base rate value to the list
-                    mCachedRates.getRates().get(0).setRate(mBaseRate);
+                    return rates;
+                })
+                .filter(rates -> !mUpdating)
+                .map(rates -> {
 
-                    if (mUpdateAll) {
+                    // set updating list flag to true
+                    mUpdating = true;
 
-                        mUpdateAll = false;
+                    // calculate diff and return result
+                    return updateRates(rates);
 
-                        // update all items
-                        mView.showNewRates(true);
-                    } else {
+                })
+                .observeOn(mSchedulersProvider.ui())
+                .subscribe(diffResult -> {
 
-                        // update only first item
-                        mView.showNewRates(false);
-                    }
+                    // null check
+                    if (diffResult == null) return;
 
+                    // show updates
+                    mView.showNewRates(diffResult);
+
+                    // set updating flag to false
+                    mUpdating = false;
 
                 }, throwable -> mView.showError()));
 
@@ -128,6 +135,7 @@ public class MainPresenter implements MainContract.Presenter {
         return mCachedRates.getRates().size();
     }
 
+    // TODO: 10/10/2018 Fix New User Input
     @Override
     public void setNewBaseRateFromUserInput(String newRate) {
         if (newRate == null || newRate.length() == 0) {
@@ -142,13 +150,36 @@ public class MainPresenter implements MainContract.Presenter {
             mBaseRate = 1;
         }
 
-        // update only first item
-        mView.showNewRates(false);
+        mCachedRates.getRates().get(0).setRate(mBaseRate);
     }
 
+    // TODO: 10/10/2018 Fix Currency Swapping
     @Override
     public void switchBaseCurrency(int position) {
+        if (mCachedRates == null || mCachedRates.getRates() == null) return;
         getLatestFxRates(mCachedRates.getRates().get(position).getName());
-        mUpdateAll = true;
+    }
+
+
+    /**
+     * Update the Rates list
+     *
+     * @param newRates The new Rates
+     * @return The Difference Result
+     */
+    private DiffUtil.DiffResult updateRates(FxRates newRates) {
+
+        // pass items to check and set detect item moves to true
+        DiffUtil.DiffResult diffResult = DiffUtil
+                .calculateDiff(new FxRatesDiffCallback(mCachedRates, newRates));
+
+        // update main rates cache list
+        mCachedRates.getRates().clear();
+        mCachedRates.getRates().addAll(newRates.getRates());
+        mCachedRates.setBase(newRates.getBase());
+        mCachedRates.setDate(newRates.getDate());
+
+        // return the diff result
+        return diffResult;
     }
 }
