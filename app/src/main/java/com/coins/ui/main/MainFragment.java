@@ -47,29 +47,20 @@ public class MainFragment extends DaggerFragment implements MainContract.View {
         // set adapter to recycler view
         mRecyclerView.setAdapter(mAdapter);
 
-        return rootView;
-    }
-
-    @Override
-    public void onStart() {
-        super.onStart();
-
+        // bind this view to presenter
         mPresenter.setView(this);
 
+        // initialize presenter
         mPresenter.init();
-    }
 
-    @Override
-    public void onStop() {
-        super.onStop();
-
-        mPresenter.dropView();
+        return rootView;
     }
 
     @Override
     public void onDestroy() {
         super.onDestroy();
 
+        if (mPresenter != null) mPresenter.dropView();
         mPresenter = null;
 
         mRecyclerView = null;

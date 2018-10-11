@@ -48,15 +48,27 @@ public class MainPresenter implements MainContract.Presenter {
     }
 
     @Override
-    public void init() {
+    public void setView(MainContract.View view) {
+        this.mView = view;
+    }
 
+    @Override
+    public void dropView() {
+        mView = null;
+        mCachedRates = null;
+        if (mCompositeDisposable != null) mCompositeDisposable.clear();
+        mCompositeDisposable = null;
+    }
+
+    @Override
+    public void init() {
         // get default EUR rates when app initializes
         getLatestFxRates("EUR");
     }
 
     @Override
     public void getLatestFxRates(String base) {
-        if (mCompositeDisposable != null) mCompositeDisposable.clear();
+        mCompositeDisposable.clear();
         mCompositeDisposable.add(mDataRepository.getLatestFxRates(base)
                 .subscribeOn(mSchedulersProvider.io())
                 .repeatWhen(completed -> completed.delay(1, TimeUnit.SECONDS))
@@ -91,18 +103,6 @@ public class MainPresenter implements MainContract.Presenter {
 
                 }, throwable -> mView.showError()));
 
-    }
-
-    @Override
-    public void setView(MainContract.View view) {
-        this.mView = view;
-    }
-
-    @Override
-    public void dropView() {
-        mView = null;
-        if (mCompositeDisposable != null) mCompositeDisposable.clear();
-        mCompositeDisposable = null;
     }
 
     @Override
