@@ -135,7 +135,6 @@ public class MainPresenter implements MainContract.Presenter {
         return mCachedRates.getRates().size();
     }
 
-    // TODO: 10/10/2018 Fix New User Input
     @Override
     public void setNewBaseRateFromUserInput(String newRate) {
         if (newRate == null || newRate.length() == 0) {
