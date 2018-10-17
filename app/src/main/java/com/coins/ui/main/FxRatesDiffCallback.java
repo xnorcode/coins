@@ -19,12 +19,12 @@ public class FxRatesDiffCallback extends DiffUtil.Callback {
 
     @Override
     public int getOldListSize() {
-        return mOldRates.getRates().size();
+        return mOldRates == null ? 0 : mOldRates.getRates().size();
     }
 
     @Override
     public int getNewListSize() {
-        return mNewRates.getRates().size();
+        return mNewRates == null ? 0 : mNewRates.getRates().size();
     }
 
     @Override
