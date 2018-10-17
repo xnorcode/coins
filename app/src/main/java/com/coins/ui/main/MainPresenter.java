@@ -1,12 +1,12 @@
 package com.coins.ui.main;
 
 import android.support.v7.util.DiffUtil;
-import android.util.Log;
 
 import com.coins.data.FxRates;
-import com.coins.data.Rate;
 import com.coins.data.source.DataRepository;
 import com.coins.utils.schedulers.BaseSchedulersProvider;
+
+import java.util.concurrent.TimeUnit;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -71,20 +71,11 @@ public class MainPresenter implements MainContract.Presenter {
         mCompositeDisposable.clear();
         mCompositeDisposable.add(mDataRepository.getLatestFxRates(base)
                 .subscribeOn(mSchedulersProvider.io())
-                // TODO: 17/10/2018 Enable after recyclerview buffer error fixed
-//                .repeatWhen(completed -> completed.delay(1, TimeUnit.SECONDS))
+                .repeatWhen(completed -> completed.delay(1, TimeUnit.SECONDS))
                 .map(rates -> {
 
-                    Log.d("TEST ==>", "Base Currency: " + rates.getBase());
-                    Rate rt = rates.getRates().get(0);
-                    Log.d("TEST ==>", "currency name: " + rt.getName());
-                    Log.d("TEST ==>", "currency rate: " + rt.getRate());
-
-                    // TODO: 11/10/2018 List positioning stays at the clicked item position
                     // set base rate value to new list
                     if (rates.getRates().size() > 0) rates.getRates().get(0).setRate(mBaseRate);
-
-                    Log.d("TEST ==>", "After adding base rate: " + rates.getRates().get(0).getRate());
 
                     return rates;
                 })
@@ -104,11 +95,8 @@ public class MainPresenter implements MainContract.Presenter {
                     // null check
                     if (diffResult == null) return;
 
-                    // TODO: 11/10/2018 base currency value does not persist when scrolling list
                     // show updates
                     mView.showNewRates(diffResult);
-
-                    Log.d("TEST", "After passed in RecyclerView: " + mCachedRates.getRates().get(0).getRate());
 
                     // set updating flag to false
                     mUpdating = false;
@@ -166,6 +154,7 @@ public class MainPresenter implements MainContract.Presenter {
 
     @Override
     public void switchBaseCurrency(int position) {
+        // TODO: 11/10/2018 List positioning stays at the clicked item position
         if (mCachedRates == null || mCachedRates.getRates() == null) return;
         getLatestFxRates(mCachedRates.getRates().get(position).getName());
     }
