@@ -166,6 +166,7 @@ public class MainPresenter implements MainContract.Presenter {
      * @param newRates The new Rates
      * @return The Difference Result
      */
+    // TODO: 17/10/2018 Should go into View
     private DiffUtil.DiffResult updateRates(FxRates newRates) {
 
         // pass items to check and set detect item moves to true
