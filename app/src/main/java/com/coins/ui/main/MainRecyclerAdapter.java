@@ -6,6 +6,7 @@ import android.view.LayoutInflater;
 import android.view.ViewGroup;
 
 import com.coins.R;
+import com.coins.utils.Constants;
 import com.coins.utils.schedulers.BaseSchedulersProvider;
 import com.jakewharton.rxbinding2.widget.RxTextView;
 
@@ -60,27 +61,37 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
     @NonNull
     @Override
     public MainRecyclerAdapterViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        return new MainRecyclerAdapterViewHolder(LayoutInflater.from(parent.getContext())
+
+        // create new custom view holder (for each adapter item)
+        MainRecyclerAdapterViewHolder vh = new MainRecyclerAdapterViewHolder(LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.main_list_item, parent, false));
+
+        // check item type
+        switch (viewType) {
+            case Constants.ITEM_WITH_CLICK:
+
+                // set onclick listener to change base currencies
+                vh.itemView.setOnClickListener(v -> mPresenter.switchBaseCurrency(vh.getAdapterPosition()));
+                break;
+
+            case Constants.ITEM_WITH_TEXT_WATCHER:
+
+                // set edit text change listener to update base rate
+                mDisposable = RxTextView.textChangeEvents(vh.mRate)
+                        .debounce(200, TimeUnit.MILLISECONDS)
+                        .subscribeOn(mSchedulersProvider.io())
+                        .observeOn(mSchedulersProvider.ui())
+                        .subscribe(rate -> mPresenter.setNewBaseRateFromUserInput(rate.text().toString()),
+                                throwable -> mPresenter.setNewBaseRateFromUserInput(null));
+                break;
+        }
+
+        return vh;
     }
 
 
     @Override
     public void onBindViewHolder(@NonNull MainRecyclerAdapterViewHolder holder, int position) {
-        if (position == 0) {
-            // TODO: 11/10/2018 every time onBind is called this method changes our BaseRate causing al values to be wrong
-            // set edit text change listener to update base rate
-            mDisposable = RxTextView.textChangeEvents(holder.mRate)
-                    .debounce(200, TimeUnit.MILLISECONDS)
-                    .subscribeOn(mSchedulersProvider.io())
-                    .observeOn(mSchedulersProvider.ui())
-                    .subscribe(rate -> mPresenter.setNewBaseRateFromUserInput(rate.text().toString()),
-                            throwable -> mPresenter.setNewBaseRateFromUserInput(null));
-        } else {
-            // switch base currency
-            holder.itemView.setOnClickListener(v -> mPresenter.switchBaseCurrency(position));
-        }
-
         // pass current position and row view into presenter
         mPresenter.onBindRecyclerRowView(position, holder);
     }
@@ -89,5 +100,10 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
     @Override
     public int getItemCount() {
         return mPresenter.getCurrenciesCount();
+    }
+
+    @Override
+    public int getItemViewType(int position) {
+        return position == 0 ? Constants.ITEM_WITH_TEXT_WATCHER : Constants.ITEM_WITH_CLICK;
     }
 }
