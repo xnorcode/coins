@@ -68,6 +68,7 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
     @Override
     public void onBindViewHolder(@NonNull MainRecyclerAdapterViewHolder holder, int position) {
         if (position == 0) {
+            // TODO: 11/10/2018 every time onBind is called this method changes our BaseRate causing al values to be wrong
             // set edit text change listener to update base rate
             mDisposable = RxTextView.textChangeEvents(holder.mRate)
                     .debounce(200, TimeUnit.MILLISECONDS)
