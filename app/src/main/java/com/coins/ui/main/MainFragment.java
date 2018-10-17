@@ -3,7 +3,6 @@ package com.coins.ui.main;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v7.util.DiffUtil;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -12,6 +11,7 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 
 import com.coins.R;
+import com.coins.data.FxRates;
 
 import javax.inject.Inject;
 
@@ -70,8 +70,8 @@ public class MainFragment extends DaggerFragment implements MainContract.View {
     }
 
     @Override
-    public void showNewRates(DiffUtil.DiffResult diffResult) {
-        diffResult.dispatchUpdatesTo(mAdapter);
+    public void showNewRates(FxRates newRates, FxRates oldRates) {
+        mAdapter.updateItems(newRates, oldRates);
     }
 
     @Override

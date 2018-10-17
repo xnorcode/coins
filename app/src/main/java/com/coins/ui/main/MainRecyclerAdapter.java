@@ -1,11 +1,13 @@
 package com.coins.ui.main;
 
 import android.support.annotation.NonNull;
+import android.support.v7.util.DiffUtil;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
 
 import com.coins.R;
+import com.coins.data.FxRates;
 import com.coins.utils.Constants;
 import com.coins.utils.schedulers.BaseSchedulersProvider;
 import com.jakewharton.rxbinding2.widget.RxTextView;
@@ -14,6 +16,9 @@ import java.util.concurrent.TimeUnit;
 
 import javax.inject.Inject;
 
+import io.reactivex.BackpressureStrategy;
+import io.reactivex.Flowable;
+import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.disposables.Disposable;
 
 /**
@@ -35,15 +40,16 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
 
 
     /**
-     * Disposable for Base Rate Input Monitoring
+     * Composite Disposable for Observables Management
      */
-    private Disposable mDisposable;
+    private CompositeDisposable mCompositeDisposable;
 
 
     @Inject
     public MainRecyclerAdapter(MainContract.Presenter presenter, BaseSchedulersProvider schedulersProvider) {
         this.mPresenter = presenter;
         this.mSchedulersProvider = schedulersProvider;
+        this.mCompositeDisposable = new CompositeDisposable();
     }
 
 
@@ -52,9 +58,47 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
      */
     public void destroy() {
         mPresenter = null;
-        if (mDisposable != null) mDisposable.dispose();
-        mDisposable = null;
+        if (mCompositeDisposable != null) mCompositeDisposable.clear();
+        mCompositeDisposable = null;
         mSchedulersProvider = null;
+    }
+
+
+    /**
+     * Update recycler view adapter items
+     */
+    public void updateItems(FxRates newRates, FxRates oldRates) {
+
+        Disposable disposable = Flowable.<DiffUtil.DiffResult>create(emitter -> {
+
+            // pass items to check for diffs
+            // set detect item moves to true
+            DiffUtil.DiffResult diffResult = DiffUtil
+                    .calculateDiff(new FxRatesDiffCallback(oldRates, newRates), true);
+
+            // update main rates cache list
+            oldRates.getRates().clear();
+            oldRates.getRates().addAll(newRates.getRates());
+            oldRates.setBase(newRates.getBase());
+            oldRates.setDate(newRates.getDate());
+
+            // proceed and pass diff results
+            emitter.onNext(diffResult);
+            emitter.onComplete();
+
+        }, BackpressureStrategy.ERROR)
+                .subscribeOn(mSchedulersProvider.io())
+                .observeOn(mSchedulersProvider.ui())
+                .subscribe(diffResult -> {
+
+                            // show items from update cache
+                            diffResult.dispatchUpdatesTo(this);
+
+                            // set presenter updating status to false
+                            mPresenter.setUpdateStatus(false);
+                        },
+                        throwable -> mPresenter.setUpdateStatus(false));
+        mCompositeDisposable.add(disposable);
     }
 
 
@@ -77,12 +121,13 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
             case Constants.ITEM_WITH_TEXT_WATCHER:
 
                 // set edit text change listener to update base rate
-                mDisposable = RxTextView.textChangeEvents(vh.mRate)
+                Disposable disposable = RxTextView.textChangeEvents(vh.mRate)
                         .debounce(200, TimeUnit.MILLISECONDS)
                         .subscribeOn(mSchedulersProvider.io())
                         .observeOn(mSchedulersProvider.ui())
                         .subscribe(rate -> mPresenter.setNewBaseRateFromUserInput(rate.text().toString()),
                                 throwable -> mPresenter.setNewBaseRateFromUserInput(null));
+                mCompositeDisposable.add(disposable);
                 break;
         }
 

@@ -1,7 +1,6 @@
 package com.coins.ui.main;
 
-import android.support.v7.util.DiffUtil;
-
+import com.coins.data.FxRates;
 import com.coins.ui.base.BasePresenter;
 import com.coins.ui.base.BaseView;
 
@@ -16,10 +15,10 @@ public interface MainContract {
         /**
          * Show updated FxRates on screen
          *
-         * @param diffResult Diff Result ref
+         * @param newRates Newly downloaded FxRates
+         * @param oldRates Cache with FxRates
          */
-        // TODO: 17/10/2018 DiffUtil must be removed from here and only be in the View
-        void showNewRates(DiffUtil.DiffResult diffResult);
+        void showNewRates(FxRates newRates, FxRates oldRates);
 
 
         /**
@@ -52,6 +51,14 @@ public interface MainContract {
          * @param rowView  RecyclerView row item view
          */
         void onBindRecyclerRowView(int position, RecyclerRowView rowView);
+
+
+        /**
+         * Set update progress
+         *
+         * @param updating Boolean value of update progress status
+         */
+        void setUpdateStatus(boolean updating);
 
 
         /**

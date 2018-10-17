@@ -1,7 +1,5 @@
 package com.coins.ui.main;
 
-import android.support.v7.util.DiffUtil;
-
 import com.coins.data.FxRates;
 import com.coins.data.source.DataRepository;
 import com.coins.utils.schedulers.BaseSchedulersProvider;
@@ -80,26 +78,14 @@ public class MainPresenter implements MainContract.Presenter {
                     return rates;
                 })
                 .filter(rates -> !mUpdating)
-                .map(rates -> {
+                .observeOn(mSchedulersProvider.ui())
+                .subscribe(newRates -> {
 
-                    // set updating list flag to true
+                    // set updating list status to true
                     mUpdating = true;
 
-                    // calculate diff and return result
-                    return updateRates(rates);
-
-                })
-                .observeOn(mSchedulersProvider.ui())
-                .subscribe(diffResult -> {
-
-                    // null check
-                    if (diffResult == null) return;
-
-                    // show updates
-                    mView.showNewRates(diffResult);
-
-                    // set updating flag to false
-                    mUpdating = false;
+                    // update view with new rates
+                    mView.showNewRates(newRates, mCachedRates);
 
                 }, throwable -> mView.showError()));
 
@@ -130,6 +116,11 @@ public class MainPresenter implements MainContract.Presenter {
     }
 
     @Override
+    public void setUpdateStatus(boolean updating) {
+        mUpdating = updating;
+    }
+
+    @Override
     public int getCurrenciesCount() {
         if (mCachedRates == null || mCachedRates.getRates() == null) return 0;
         return mCachedRates.getRates().size();
@@ -157,29 +148,5 @@ public class MainPresenter implements MainContract.Presenter {
         // TODO: 11/10/2018 List positioning stays at the clicked item position
         if (mCachedRates == null || mCachedRates.getRates() == null) return;
         getLatestFxRates(mCachedRates.getRates().get(position).getName());
-    }
-
-
-    /**
-     * Update the Rates list
-     *
-     * @param newRates The new Rates
-     * @return The Difference Result
-     */
-    // TODO: 17/10/2018 Should go into View
-    private DiffUtil.DiffResult updateRates(FxRates newRates) {
-
-        // pass items to check and set detect item moves to true
-        DiffUtil.DiffResult diffResult = DiffUtil
-                .calculateDiff(new FxRatesDiffCallback(mCachedRates, newRates), true);
-
-        // update main rates cache list
-        mCachedRates.getRates().clear();
-        mCachedRates.getRates().addAll(newRates.getRates());
-        mCachedRates.setBase(newRates.getBase());
-        mCachedRates.setDate(newRates.getDate());
-
-        // return the diff result
-        return diffResult;
     }
 }
