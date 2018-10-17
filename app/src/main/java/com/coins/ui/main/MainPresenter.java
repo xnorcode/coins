@@ -71,6 +71,7 @@ public class MainPresenter implements MainContract.Presenter {
         mCompositeDisposable.clear();
         mCompositeDisposable.add(mDataRepository.getLatestFxRates(base)
                 .subscribeOn(mSchedulersProvider.io())
+                // TODO: 17/10/2018 Enable after recyclerview buffer error fixed
 //                .repeatWhen(completed -> completed.delay(1, TimeUnit.SECONDS))
                 .map(rates -> {
 
