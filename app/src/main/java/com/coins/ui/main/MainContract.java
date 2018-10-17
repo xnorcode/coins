@@ -14,18 +14,11 @@ public interface MainContract {
 
 
         /**
-         * User requests for new currency rates
-         *
-         * @param base The base currency
-         */
-        void refreshRates(String base);
-
-
-        /**
          * Show updated FxRates on screen
          *
          * @param diffResult Diff Result ref
          */
+        // TODO: 17/10/2018 DiffUtil must be removed from here and only be in the View
         void showNewRates(DiffUtil.DiffResult diffResult);
 
 

@@ -70,11 +70,6 @@ public class MainFragment extends DaggerFragment implements MainContract.View {
     }
 
     @Override
-    public void refreshRates(String base) {
-        mPresenter.getLatestFxRates(base);
-    }
-
-    @Override
     public void showNewRates(DiffUtil.DiffResult diffResult) {
         diffResult.dispatchUpdatesTo(mAdapter);
     }
