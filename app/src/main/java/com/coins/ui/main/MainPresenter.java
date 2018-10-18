@@ -25,7 +25,8 @@ public class MainPresenter implements MainContract.Presenter {
 
     private BaseSchedulersProvider mSchedulersProvider;
 
-    private FxRates mCachedRates;
+    // cache is visible only for the tests and presenter
+    protected FxRates mCachedRates;
 
     private double mBaseRate;
 
