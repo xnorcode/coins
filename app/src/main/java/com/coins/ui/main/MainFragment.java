@@ -70,17 +70,17 @@ public class MainFragment extends DaggerFragment implements MainContract.View {
     }
 
     @Override
-    public void showNewRates(FxRates newRates, FxRates oldRates) {
-        mAdapter.updateItems(newRates, oldRates);
+    public void setPresenter(MainContract.Presenter presenter) {
+        // used when manual injection of presenter
+    }
+
+    @Override
+    public void showNewRates(FxRates newRates, FxRates oldRates, boolean presenterStatus) {
+        mAdapter.updateItems(newRates, oldRates, presenterStatus);
     }
 
     @Override
     public void showError() {
         Toast.makeText(getContext(), getContext().getResources().getString(R.string.error_msg), Toast.LENGTH_LONG).show();
-    }
-
-    @Override
-    public void setPresenter(MainContract.Presenter presenter) {
-        // used when manual injection of presenter
     }
 }

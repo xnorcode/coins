@@ -1,6 +1,7 @@
 package com.coins.ui.main;
 
 import com.coins.data.FxRates;
+import com.coins.data.Rate;
 import com.coins.data.source.DataRepository;
 import com.coins.utils.schedulers.BaseSchedulersProvider;
 
@@ -71,22 +72,15 @@ public class MainPresenter implements MainContract.Presenter {
         mCompositeDisposable.add(mDataRepository.getLatestFxRates(base)
                 .subscribeOn(mSchedulersProvider.io())
                 .repeatWhen(completed -> completed.delay(1, TimeUnit.SECONDS))
-                .map(rates -> {
-
-                    // set base rate value to new list
-                    if (rates.getRates().size() > 0) rates.getRates().get(0).setRate(mBaseRate);
-
-                    return rates;
-                })
                 .filter(rates -> !mUpdating)
                 .observeOn(mSchedulersProvider.ui())
                 .subscribe(newRates -> {
 
                     // set updating list status to true
-                    mUpdating = true;
+                    setUpdateStatus(true);
 
                     // update view with new rates
-                    mView.showNewRates(newRates, mCachedRates);
+                    mView.showNewRates(newRates, mCachedRates, false);
 
                 }, throwable -> mView.showError()));
 
@@ -146,8 +140,35 @@ public class MainPresenter implements MainContract.Presenter {
 
     @Override
     public void switchBaseCurrency(int position) {
-        // TODO: 11/10/2018 List positioning stays at the clicked item position
+
+        // null check
         if (mCachedRates == null || mCachedRates.getRates() == null) return;
-        getLatestFxRates(mCachedRates.getRates().get(position).getName());
+
+        // set updating list status to true
+        setUpdateStatus(true);
+
+        // get selected new base currency
+        Rate selected = mCachedRates.getRates().get(position);
+
+        // maintain rate shown on screen
+        selected.setRate(selected.getRate() * mBaseRate);
+
+        // reorder list
+        FxRates rates = new FxRates();
+        rates.setBase(selected.getName());
+        rates.setDate(mCachedRates.getDate());
+        rates.getRates().clear();
+        rates.getRates().addAll(mCachedRates.getRates());
+        rates.getRates().remove(selected);
+        rates.getRates().add(0, selected);
+
+        // update new base rate
+        mBaseRate = selected.getRate();
+
+        // show new list order
+        mView.showNewRates(rates, mCachedRates, false);
+
+        // get latest fx rates for new base currency
+        getLatestFxRates(selected.getName());
     }
 }

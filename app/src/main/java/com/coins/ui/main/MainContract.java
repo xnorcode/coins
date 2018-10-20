@@ -15,10 +15,11 @@ public interface MainContract {
         /**
          * Show updated FxRates on screen
          *
-         * @param newRates Newly downloaded FxRates
-         * @param oldRates Cache with FxRates
+         * @param newRates        Newly downloaded FxRates
+         * @param oldRates        Cache with FxRates
+         * @param presenterStatus set the status of the presenter
          */
-        void showNewRates(FxRates newRates, FxRates oldRates);
+        void showNewRates(FxRates newRates, FxRates oldRates, boolean presenterStatus);
 
 
         /**

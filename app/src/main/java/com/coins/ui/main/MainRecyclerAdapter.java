@@ -67,7 +67,7 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
     /**
      * Update recycler view adapter items
      */
-    public void updateItems(FxRates newRates, FxRates oldRates) {
+    public void updateItems(FxRates newRates, FxRates oldRates, boolean updatingStatus) {
 
         Disposable disposable = Flowable.<DiffUtil.DiffResult>create(emitter -> {
 
@@ -95,12 +95,11 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
                             diffResult.dispatchUpdatesTo(this);
 
                             // set presenter updating status to false
-                            mPresenter.setUpdateStatus(false);
+                            mPresenter.setUpdateStatus(updatingStatus);
                         },
                         throwable -> mPresenter.setUpdateStatus(false));
         mCompositeDisposable.add(disposable);
     }
-
 
     @NonNull
     @Override
@@ -121,13 +120,13 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
             case Constants.ITEM_WITH_TEXT_WATCHER:
 
                 // set edit text change listener to update base rate
-                Disposable disposable = RxTextView.textChangeEvents(vh.mRate)
+                Disposable disText = RxTextView.textChangeEvents(vh.mRate)
                         .debounce(200, TimeUnit.MILLISECONDS)
                         .subscribeOn(mSchedulersProvider.io())
                         .observeOn(mSchedulersProvider.ui())
                         .subscribe(rate -> mPresenter.setNewBaseRateFromUserInput(rate.text().toString()),
                                 throwable -> mPresenter.setNewBaseRateFromUserInput(null));
-                mCompositeDisposable.add(disposable);
+                mCompositeDisposable.add(disText);
                 break;
         }
 
