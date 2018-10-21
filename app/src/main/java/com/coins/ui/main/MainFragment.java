@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.LinearSmoothScroller;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -33,6 +34,8 @@ public class MainFragment extends DaggerFragment implements MainContract.View {
     @Inject
     MainContract.Presenter mPresenter;
 
+    private LinearLayoutManager mLinearLayoutManager;
+
 
     @Nullable
     @Override
@@ -41,8 +44,11 @@ public class MainFragment extends DaggerFragment implements MainContract.View {
 
         ButterKnife.bind(this, rootView);
 
+        // create layout manager
+        mLinearLayoutManager = new LinearLayoutManager(getContext());
+
         // set layout manager
-        mRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        mRecyclerView.setLayoutManager(mLinearLayoutManager);
 
         // set adapter to recycler view
         mRecyclerView.setAdapter(mAdapter);
@@ -67,6 +73,8 @@ public class MainFragment extends DaggerFragment implements MainContract.View {
 
         if (mAdapter != null) mAdapter.destroy();
         mAdapter = null;
+
+        mLinearLayoutManager = null;
     }
 
     @Override
@@ -82,5 +90,23 @@ public class MainFragment extends DaggerFragment implements MainContract.View {
     @Override
     public void showError() {
         Toast.makeText(getContext(), getContext().getResources().getString(R.string.error_msg), Toast.LENGTH_LONG).show();
+    }
+
+    @Override
+    public void scrollBackToTop() {
+
+        // create smooth scroller
+        RecyclerView.SmoothScroller smoothScroller = new LinearSmoothScroller(getContext()) {
+            @Override
+            protected int getVerticalSnapPreference() {
+                return LinearSmoothScroller.SNAP_TO_START;
+            }
+        };
+
+        // set position to scroll to
+        smoothScroller.setTargetPosition(0);
+
+        // start scrolling
+        mLinearLayoutManager.startSmoothScroll(smoothScroller);
     }
 }

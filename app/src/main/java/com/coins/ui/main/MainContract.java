@@ -28,6 +28,12 @@ public interface MainContract {
          * Notify user there was an error
          */
         void showError();
+
+
+        /**
+         * Scroll back to the top of the list
+         */
+        void scrollBackToTop();
     }
 
     interface Presenter extends BasePresenter<View> {

@@ -167,6 +167,9 @@ public class MainPresenter implements MainContract.Presenter {
         // set updating list status to true
         setUpdateStatus(true);
 
+        // scroll list back to the top
+        mView.scrollBackToTop();
+
         // get selected new base currency
         Rate selected = mCachedRates.getRates().get(position);
 
