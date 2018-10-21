@@ -120,12 +120,14 @@ public class MainPresenter implements MainContract.Presenter {
             // get payload data
             Map data = (Map) payloads.get(0);
 
-            if (data.containsKey("RATE") && (boolean) data.get("RATE")) {
+            // first item (position=0) will only update on
+            // first data load at the empty payload scenario
+            if (data.containsKey("RATE") && (boolean) data.get("RATE") && position > 0) {
                 // get data from list
                 double rate = mCachedRates.getRates().get(position).getRate();
 
                 // set rate
-                rowView.setRate(String.valueOf(position == 0 ? mBaseRate : mBaseRate * rate));
+                rowView.setRate(String.valueOf(mBaseRate * rate));
             }
         }
     }
