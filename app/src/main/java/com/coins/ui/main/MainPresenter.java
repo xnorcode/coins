@@ -5,6 +5,8 @@ import com.coins.data.Rate;
 import com.coins.data.source.DataRepository;
 import com.coins.utils.schedulers.BaseSchedulersProvider;
 
+import java.util.List;
+import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 import javax.inject.Inject;
@@ -108,6 +110,24 @@ public class MainPresenter implements MainContract.Presenter {
         // set name
         rowView.setName(name);
 
+    }
+
+    @Override
+    public void onBindRecyclerRowView(int position, MainContract.RecyclerRowView rowView, List<Object> payloads) {
+        if (payloads.isEmpty()) {
+            onBindRecyclerRowView(position, rowView);
+        } else {
+            // get payload data
+            Map data = (Map) payloads.get(0);
+
+            if (data.containsKey("RATE") && (boolean) data.get("RATE")) {
+                // get data from list
+                double rate = mCachedRates.getRates().get(position).getRate();
+
+                // set rate
+                rowView.setRate(String.valueOf(position == 0 ? mBaseRate : mBaseRate * rate));
+            }
+        }
     }
 
     @Override

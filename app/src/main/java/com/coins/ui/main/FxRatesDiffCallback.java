@@ -5,6 +5,9 @@ import android.support.v7.util.DiffUtil;
 
 import com.coins.data.FxRates;
 
+import java.util.HashMap;
+import java.util.Map;
+
 /**
  * Created by xnorcode on 05/10/2018.
  */
@@ -42,7 +45,11 @@ public class FxRatesDiffCallback extends DiffUtil.Callback {
     @Nullable
     @Override
     public Object getChangePayload(int oldItemPosition, int newItemPosition) {
-        // implement this method for ItemAnimator
-        return super.getChangePayload(oldItemPosition, newItemPosition);
+        // here I can pass any change values I require,
+        // for this example I just change the rate so
+        // I'll just include a flag
+        Map<String, Boolean> changes = new HashMap<>();
+        changes.put("RATE", true);
+        return changes;
     }
 }

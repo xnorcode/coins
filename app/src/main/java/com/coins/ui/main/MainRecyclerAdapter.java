@@ -12,6 +12,7 @@ import com.coins.utils.Constants;
 import com.coins.utils.schedulers.BaseSchedulersProvider;
 import com.jakewharton.rxbinding2.widget.RxTextView;
 
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 import javax.inject.Inject;
@@ -114,7 +115,7 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
             case Constants.ITEM_WITH_CLICK:
 
                 // set onclick listener to change base currencies
-                vh.itemView.setOnClickListener(v -> mPresenter.switchBaseCurrency(vh.getAdapterPosition()));
+                vh.mName.setOnClickListener(v -> mPresenter.switchBaseCurrency(vh.getAdapterPosition()));
                 break;
 
             case Constants.ITEM_WITH_TEXT_WATCHER:
@@ -140,6 +141,11 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
         mPresenter.onBindRecyclerRowView(position, holder);
     }
 
+    @Override
+    public void onBindViewHolder(@NonNull MainRecyclerAdapterViewHolder holder, int position, @NonNull List<Object> payloads) {
+        // pass current position, row view and change payloads into presenter
+        mPresenter.onBindRecyclerRowView(position, holder, payloads);
+    }
 
     @Override
     public int getItemCount() {

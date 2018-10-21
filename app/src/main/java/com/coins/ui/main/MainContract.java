@@ -4,6 +4,8 @@ import com.coins.data.FxRates;
 import com.coins.ui.base.BasePresenter;
 import com.coins.ui.base.BaseView;
 
+import java.util.List;
+
 /**
  * Created by xnorcode on 11/09/2018.
  */
@@ -52,6 +54,16 @@ public interface MainContract {
          * @param rowView  RecyclerView row item view
          */
         void onBindRecyclerRowView(int position, RecyclerRowView rowView);
+
+
+        /**
+         * Bind RecyclerView Row View in presenter with Change Payloads
+         *
+         * @param position The current RecyclerView row item position
+         * @param rowView  RecyclerView row item view
+         * @param payloads The change between old and new items content
+         */
+        void onBindRecyclerRowView(int position, RecyclerRowView rowView, List<Object> payloads);
 
 
         /**
