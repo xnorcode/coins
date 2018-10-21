@@ -63,7 +63,7 @@ public class MainPresenterTest {
 
         // validate View got response data only once
         // since presenter is now in updating mode
-        Mockito.verify(mView).showNewRates(mRates, mPresenter.mCachedRates);
+        Mockito.verify(mView).showNewRates(mRates, mPresenter.mCachedRates, false);
 
         // set updating status to false to trigger
         // another call to the View, testing the
@@ -75,7 +75,7 @@ public class MainPresenterTest {
 
         // verify View is called one more time,
         // in total is called twice
-        Mockito.verify(mView, Mockito.times(2)).showNewRates(mRates, mPresenter.mCachedRates);
+        Mockito.verify(mView, Mockito.times(2)).showNewRates(mRates, mPresenter.mCachedRates, false);
     }
 
 
