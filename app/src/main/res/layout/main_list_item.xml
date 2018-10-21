@@ -33,10 +33,12 @@
 
     <EditText
         android:id="@+id/list_item_rate"
-        android:layout_width="100dp"
+        android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:layout_gravity="end|center_vertical"
         android:inputType="numberDecimal"
-        android:maxLength="7"/>
+        android:maxWidth="120dp"
+        android:maxLength="10"
+        android:minWidth="60dp"/>
 
 </FrameLayout>
