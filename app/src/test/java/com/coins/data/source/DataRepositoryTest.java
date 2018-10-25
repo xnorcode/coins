@@ -46,22 +46,18 @@ public class DataRepositoryTest {
 
 
     @Test
-    public void getLatestFxRates() {
-        try {
-            // make data available in remote data source
-            Mockito.when(remoteDataSource.getLatestFxRatesFromApi("EUR")).thenReturn(rates);
+    public void getLatestFxRates() throws IOException {
+        // make data available in remote data source
+        Mockito.when(remoteDataSource.getLatestFxRatesFromApi("EUR")).thenReturn(rates);
 
-            // call method and subscribe
-            TestSubscriber<FxRates> testSubscriber = new TestSubscriber<>();
-            dataRepository.getLatestFxRates("EUR").subscribe(testSubscriber);
+        // call method and subscribe
+        TestSubscriber<FxRates> testSubscriber = new TestSubscriber<>();
+        dataRepository.getLatestFxRates("EUR").subscribe(testSubscriber);
 
-            // verify remote data source method called once
-            Mockito.verify(remoteDataSource).getLatestFxRatesFromApi("EUR");
+        // verify remote data source method called once
+        Mockito.verify(remoteDataSource).getLatestFxRatesFromApi("EUR");
 
-            // check results
-            testSubscriber.assertValue(rates);
-        } catch (IOException e){
-            e.printStackTrace();
-        }
+        // check results
+        testSubscriber.assertValue(rates);
     }
 }
