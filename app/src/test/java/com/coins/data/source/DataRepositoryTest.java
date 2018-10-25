@@ -27,13 +27,13 @@ public class DataRepositoryTest {
     @Rule
     public MockitoRule mockitoRule = MockitoJUnit.rule();
 
-    private FxRates mRates;
+    private FxRates rates;
 
     @Mock
-    private RemoteDataSource mRemoteDataSource;
+    private RemoteDataSource remoteDataSource;
 
     @InjectMocks
-    private DataRepository mDataRepository;
+    private DataRepository dataRepository;
 
 
     @Before
@@ -41,7 +41,7 @@ public class DataRepositoryTest {
         // init rates
         List<Rate> rates = new ArrayList<>();
         rates.add(new Rate("USD", 1.05));
-        mRates = new FxRates("EUR", "today", rates);
+        this.rates = new FxRates("EUR", "today", rates);
     }
 
 
@@ -49,17 +49,17 @@ public class DataRepositoryTest {
     public void getLatestFxRates() {
         try {
             // make data available in remote data source
-            Mockito.when(mRemoteDataSource.getLatestFxRatesFromApi("EUR")).thenReturn(mRates);
+            Mockito.when(remoteDataSource.getLatestFxRatesFromApi("EUR")).thenReturn(rates);
 
             // call method and subscribe
             TestSubscriber<FxRates> testSubscriber = new TestSubscriber<>();
-            mDataRepository.getLatestFxRates("EUR").subscribe(testSubscriber);
+            dataRepository.getLatestFxRates("EUR").subscribe(testSubscriber);
 
             // verify remote data source method called once
-            Mockito.verify(mRemoteDataSource).getLatestFxRatesFromApi("EUR");
+            Mockito.verify(remoteDataSource).getLatestFxRatesFromApi("EUR");
 
             // check results
-            testSubscriber.assertValue(mRates);
+            testSubscriber.assertValue(rates);
         } catch (IOException e){
             e.printStackTrace();
         }

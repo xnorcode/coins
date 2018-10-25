@@ -26,15 +26,15 @@ import dagger.android.support.DaggerFragment;
 public class MainFragment extends DaggerFragment implements MainContract.View {
 
     @BindView(R.id.recyclerView)
-    RecyclerView mRecyclerView;
+    RecyclerView recyclerView;
 
     @Inject
-    MainRecyclerAdapter mAdapter;
+    MainRecyclerAdapter adapter;
 
     @Inject
-    MainContract.Presenter mPresenter;
+    MainContract.Presenter presenter;
 
-    private LinearLayoutManager mLinearLayoutManager;
+    private LinearLayoutManager linearLayoutManager;
 
 
     @Nullable
@@ -45,19 +45,19 @@ public class MainFragment extends DaggerFragment implements MainContract.View {
         ButterKnife.bind(this, rootView);
 
         // create layout manager
-        mLinearLayoutManager = new LinearLayoutManager(getContext());
+        linearLayoutManager = new LinearLayoutManager(getContext());
 
         // set layout manager
-        mRecyclerView.setLayoutManager(mLinearLayoutManager);
+        recyclerView.setLayoutManager(linearLayoutManager);
 
         // set adapter to recycler view
-        mRecyclerView.setAdapter(mAdapter);
+        recyclerView.setAdapter(adapter);
 
         // bind this view to presenter
-        mPresenter.setView(this);
+        presenter.setView(this);
 
         // initialize presenter
-        mPresenter.init();
+        presenter.init();
 
         return rootView;
     }
@@ -66,15 +66,15 @@ public class MainFragment extends DaggerFragment implements MainContract.View {
     public void onDestroy() {
         super.onDestroy();
 
-        if (mPresenter != null) mPresenter.dropView();
-        mPresenter = null;
+        if (presenter != null) presenter.dropView();
+        presenter = null;
 
-        mRecyclerView = null;
+        recyclerView = null;
 
-        if (mAdapter != null) mAdapter.destroy();
-        mAdapter = null;
+        if (adapter != null) adapter.destroy();
+        adapter = null;
 
-        mLinearLayoutManager = null;
+        linearLayoutManager = null;
     }
 
     @Override
@@ -84,7 +84,7 @@ public class MainFragment extends DaggerFragment implements MainContract.View {
 
     @Override
     public void showNewRates(FxRates newRates, FxRates oldRates, boolean presenterStatus) {
-        mAdapter.updateItems(newRates, oldRates, presenterStatus);
+        adapter.updateItems(newRates, oldRates, presenterStatus);
     }
 
     @Override
@@ -107,6 +107,6 @@ public class MainFragment extends DaggerFragment implements MainContract.View {
         smoothScroller.setTargetPosition(0);
 
         // start scrolling
-        mLinearLayoutManager.startSmoothScroll(smoothScroller);
+        linearLayoutManager.startSmoothScroll(smoothScroller);
     }
 }

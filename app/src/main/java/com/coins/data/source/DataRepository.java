@@ -15,14 +15,14 @@ import io.reactivex.Flowable;
 @Singleton
 public class DataRepository implements DataSource {
 
-    private RemoteDataSource mRemoteDataSource;
+    private RemoteDataSource remoteDataSource;
 
-    private FxRates mCachedRates;
+    private FxRates cachedRates;
 
 
     @Inject
     public DataRepository(RemoteDataSource remoteDataSource) {
-        this.mRemoteDataSource = remoteDataSource;
+        this.remoteDataSource = remoteDataSource;
     }
 
 
@@ -31,16 +31,16 @@ public class DataRepository implements DataSource {
         return Flowable.<FxRates>create(emitter -> {
 
             // execute network call
-            FxRates rates = mRemoteDataSource.getLatestFxRatesFromApi(base);
+            FxRates rates = remoteDataSource.getLatestFxRatesFromApi(base);
 
             if (rates != null) {
                 // cache response
-                mCachedRates = rates;
+                cachedRates = rates;
                 // proceed
                 emitter.onNext(rates);
-            } else if (mCachedRates != null) {
+            } else if (cachedRates != null) {
                 // show cached data
-                emitter.onNext(mCachedRates);
+                emitter.onNext(cachedRates);
             } else {
                 // throw error if no data to show
                 emitter.onError(new Exception("Could not get latest fx rates..."));

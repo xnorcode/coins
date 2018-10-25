@@ -19,20 +19,20 @@ import butterknife.ButterKnife;
 public class MainRecyclerAdapterViewHolder extends RecyclerView.ViewHolder implements MainContract.RecyclerRowView {
 
     @BindView(R.id.list_item_icon)
-    ImageView mIcon;
+    ImageView icon;
 
     @BindView(R.id.list_item_name)
-    TextView mName;
+    TextView name;
 
     @BindView(R.id.list_item_description)
-    TextView mDescription;
+    TextView description;
 
     @BindView(R.id.list_item_rate)
-    EditText mRate;
+    EditText rate;
 
-    private String mPackageName;
+    private String packageName;
 
-    private Resources mResources;
+    private Resources resources;
 
 
     public MainRecyclerAdapterViewHolder(View itemView) {
@@ -42,38 +42,38 @@ public class MainRecyclerAdapterViewHolder extends RecyclerView.ViewHolder imple
         ButterKnife.bind(this, itemView);
 
         // Get package name
-        mPackageName = itemView.getContext().getApplicationContext().getPackageName();
+        packageName = itemView.getContext().getApplicationContext().getPackageName();
 
         // Get ref to resources
-        mResources = itemView.getResources();
+        resources = itemView.getResources();
     }
 
     @Override
     public void setIcon(String iconName) {
         Picasso.get()
-                .load(mResources.getIdentifier(iconName, "drawable", mPackageName))
-                .into(mIcon);
+                .load(resources.getIdentifier(iconName, "drawable", packageName))
+                .into(icon);
     }
 
     @Override
     public void setName(String name) {
-        mName.setText(name);
+        this.name.setText(name);
     }
 
     @Override
     public void setDescription(String name) {
         // get the resource id
-        int resourceId = mResources.getIdentifier(name, "string", mPackageName);
+        int resourceId = resources.getIdentifier(name, "string", packageName);
 
         // get the text from the string resource
-        String description = mResources.getString(resourceId);
+        String description = resources.getString(resourceId);
 
         // set description
-        mDescription.setText(description);
+        this.description.setText(description);
     }
 
     @Override
     public void setRate(String rate) {
-        mRate.setText(rate);
+        this.rate.setText(rate);
     }
 }

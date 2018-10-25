@@ -13,33 +13,33 @@ import java.util.Map;
  */
 public class FxRatesDiffCallback extends DiffUtil.Callback {
 
-    private final FxRates mOldRates, mNewRates;
+    private final FxRates oldRates, newRates;
 
-    public FxRatesDiffCallback(FxRates mOldRates, FxRates mNewRates) {
-        this.mOldRates = mOldRates;
-        this.mNewRates = mNewRates;
+    public FxRatesDiffCallback(FxRates oldRates, FxRates newRates) {
+        this.oldRates = oldRates;
+        this.newRates = newRates;
     }
 
     @Override
     public int getOldListSize() {
-        return mOldRates == null ? 0 : mOldRates.getRates().size();
+        return oldRates == null ? 0 : oldRates.getRates().size();
     }
 
     @Override
     public int getNewListSize() {
-        return mNewRates == null ? 0 : mNewRates.getRates().size();
+        return newRates == null ? 0 : newRates.getRates().size();
     }
 
     @Override
     public boolean areItemsTheSame(int oldItemPosition, int newItemPosition) {
-        return mOldRates.getRates().get(oldItemPosition).getName()
-                .equals(mNewRates.getRates().get(newItemPosition).getName());
+        return oldRates.getRates().get(oldItemPosition).getName()
+                .equals(newRates.getRates().get(newItemPosition).getName());
     }
 
     @Override
     public boolean areContentsTheSame(int oldItemPosition, int newItemPosition) {
-        return mOldRates.getRates().get(oldItemPosition)
-                .equals(mNewRates.getRates().get(newItemPosition));
+        return oldRates.getRates().get(oldItemPosition)
+                .equals(newRates.getRates().get(newItemPosition));
     }
 
     @Nullable

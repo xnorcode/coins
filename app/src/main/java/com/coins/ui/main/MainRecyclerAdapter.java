@@ -31,26 +31,26 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
     /**
      * Ref to Main Activity Presenter
      */
-    private MainContract.Presenter mPresenter;
+    private MainContract.Presenter presenter;
 
 
     /**
      * Schedulers Provider
      */
-    private BaseSchedulersProvider mSchedulersProvider;
+    private BaseSchedulersProvider schedulersProvider;
 
 
     /**
      * Composite Disposable for Observables Management
      */
-    private CompositeDisposable mCompositeDisposable;
+    private CompositeDisposable compositeDisposable;
 
 
     @Inject
     public MainRecyclerAdapter(MainContract.Presenter presenter, BaseSchedulersProvider schedulersProvider) {
-        this.mPresenter = presenter;
-        this.mSchedulersProvider = schedulersProvider;
-        this.mCompositeDisposable = new CompositeDisposable();
+        this.presenter = presenter;
+        this.schedulersProvider = schedulersProvider;
+        this.compositeDisposable = new CompositeDisposable();
     }
 
 
@@ -58,10 +58,10 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
      * Release memory refs.
      */
     public void destroy() {
-        mPresenter = null;
-        if (mCompositeDisposable != null) mCompositeDisposable.clear();
-        mCompositeDisposable = null;
-        mSchedulersProvider = null;
+        presenter = null;
+        if (compositeDisposable != null) compositeDisposable.clear();
+        compositeDisposable = null;
+        schedulersProvider = null;
     }
 
 
@@ -88,18 +88,18 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
             emitter.onComplete();
 
         }, BackpressureStrategy.ERROR)
-                .subscribeOn(mSchedulersProvider.io())
-                .observeOn(mSchedulersProvider.ui())
+                .subscribeOn(schedulersProvider.io())
+                .observeOn(schedulersProvider.ui())
                 .subscribe(diffResult -> {
 
                             // show items from update cache
                             diffResult.dispatchUpdatesTo(this);
 
                             // set presenter updating status to false
-                            mPresenter.setUpdateStatus(updatingStatus);
+                            presenter.setUpdateStatus(updatingStatus);
                         },
-                        throwable -> mPresenter.setUpdateStatus(false));
-        mCompositeDisposable.add(disposable);
+                        throwable -> presenter.setUpdateStatus(false));
+        compositeDisposable.add(disposable);
     }
 
     @NonNull
@@ -115,19 +115,19 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
             case Constants.ITEM_WITH_CLICK:
 
                 // set onclick listener to change base currencies
-                vh.mName.setOnClickListener(v -> mPresenter.switchBaseCurrency(vh.getAdapterPosition()));
+                vh.name.setOnClickListener(v -> presenter.switchBaseCurrency(vh.getAdapterPosition()));
                 break;
 
             case Constants.ITEM_WITH_TEXT_WATCHER:
 
                 // set edit text change listener to update base rate
-                Disposable disText = RxTextView.textChangeEvents(vh.mRate)
+                Disposable disText = RxTextView.textChangeEvents(vh.rate)
                         .debounce(200, TimeUnit.MILLISECONDS)
-                        .subscribeOn(mSchedulersProvider.io())
-                        .observeOn(mSchedulersProvider.ui())
-                        .subscribe(rate -> mPresenter.setNewBaseRateFromUserInput(rate.text().toString()),
-                                throwable -> mPresenter.setNewBaseRateFromUserInput(null));
-                mCompositeDisposable.add(disText);
+                        .subscribeOn(schedulersProvider.io())
+                        .observeOn(schedulersProvider.ui())
+                        .subscribe(rate -> presenter.setNewBaseRateFromUserInput(rate.text().toString()),
+                                throwable -> presenter.setNewBaseRateFromUserInput(null));
+                compositeDisposable.add(disText);
                 break;
         }
 
@@ -138,18 +138,18 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
     @Override
     public void onBindViewHolder(@NonNull MainRecyclerAdapterViewHolder holder, int position) {
         // pass current position and row view into presenter
-        mPresenter.onBindRecyclerRowView(position, holder);
+        presenter.onBindRecyclerRowView(position, holder);
     }
 
     @Override
     public void onBindViewHolder(@NonNull MainRecyclerAdapterViewHolder holder, int position, @NonNull List<Object> payloads) {
         // pass current position, row view and change payloads into presenter
-        mPresenter.onBindRecyclerRowView(position, holder, payloads);
+        presenter.onBindRecyclerRowView(position, holder, payloads);
     }
 
     @Override
     public int getItemCount() {
-        return mPresenter.getCurrenciesCount();
+        return presenter.getCurrenciesCount();
     }
 
     @Override

@@ -20,46 +20,46 @@ import io.reactivex.disposables.CompositeDisposable;
 @Singleton
 public class MainPresenter implements MainContract.Presenter {
 
-    private MainContract.View mView;
+    private MainContract.View view;
 
-    private DataRepository mDataRepository;
+    private DataRepository dataRepository;
 
-    private CompositeDisposable mCompositeDisposable;
+    private CompositeDisposable compositeDisposable;
 
-    private BaseSchedulersProvider mSchedulersProvider;
+    private BaseSchedulersProvider schedulersProvider;
 
     // cache is visible only for the tests and presenter
-    protected FxRates mCachedRates;
+    protected FxRates cachedRates;
 
-    private double mBaseRate;
+    private double baseRate;
 
-    private static boolean mUpdating = false;
+    private static boolean isUpdating = false;
 
 
     @Inject
     public MainPresenter(DataRepository dataRepository, BaseSchedulersProvider schedulersProvider) {
-        this.mDataRepository = dataRepository;
-        this.mSchedulersProvider = schedulersProvider;
-        this.mCompositeDisposable = new CompositeDisposable();
+        this.dataRepository = dataRepository;
+        this.schedulersProvider = schedulersProvider;
+        this.compositeDisposable = new CompositeDisposable();
 
         // set initial base rate
-        this.mBaseRate = 100;
+        this.baseRate = 100;
 
         // init cache
-        this.mCachedRates = new FxRates();
+        this.cachedRates = new FxRates();
     }
 
     @Override
     public void setView(MainContract.View view) {
-        this.mView = view;
+        this.view = view;
     }
 
     @Override
     public void dropView() {
-        mView = null;
-        mCachedRates = null;
-        if (mCompositeDisposable != null) mCompositeDisposable.clear();
-        mCompositeDisposable = null;
+        view = null;
+        cachedRates = null;
+        if (compositeDisposable != null) compositeDisposable.clear();
+        compositeDisposable = null;
     }
 
     @Override
@@ -70,21 +70,21 @@ public class MainPresenter implements MainContract.Presenter {
 
     @Override
     public void getLatestFxRates(String base) {
-        mCompositeDisposable.clear();
-        mCompositeDisposable.add(mDataRepository.getLatestFxRates(base)
-                .subscribeOn(mSchedulersProvider.io())
+        compositeDisposable.clear();
+        compositeDisposable.add(dataRepository.getLatestFxRates(base)
+                .subscribeOn(schedulersProvider.io())
                 .repeatWhen(completed -> completed.delay(1, TimeUnit.SECONDS))
-                .filter(rates -> !mUpdating)
-                .observeOn(mSchedulersProvider.ui())
+                .filter(rates -> !isUpdating)
+                .observeOn(schedulersProvider.ui())
                 .subscribe(newRates -> {
 
                     // set updating list status to true
                     setUpdateStatus(true);
 
                     // update view with new rates
-                    mView.showNewRates(newRates, mCachedRates, false);
+                    view.showNewRates(newRates, cachedRates, false);
 
-                }, throwable -> mView.showError()));
+                }, throwable -> view.showError()));
 
     }
 
@@ -92,14 +92,14 @@ public class MainPresenter implements MainContract.Presenter {
     public void onBindRecyclerRowView(int position, MainContract.RecyclerRowView rowView) {
 
         // null check
-        if (mCachedRates == null || mCachedRates.getRates() == null) return;
+        if (cachedRates == null || cachedRates.getRates() == null) return;
 
         // get data from list
-        double rate = mCachedRates.getRates().get(position).getRate();
-        String name = mCachedRates.getRates().get(position).getName();
+        double rate = cachedRates.getRates().get(position).getRate();
+        String name = cachedRates.getRates().get(position).getName();
 
         // set rate
-        rowView.setRate(String.valueOf(position == 0 ? mBaseRate : mBaseRate * rate));
+        rowView.setRate(String.valueOf(position == 0 ? baseRate : baseRate * rate));
 
         // set description
         rowView.setDescription(name);
@@ -124,74 +124,74 @@ public class MainPresenter implements MainContract.Presenter {
             // first data load at the empty payload scenario
             if (data.containsKey("RATE") && (boolean) data.get("RATE") && position > 0) {
                 // get data from list
-                double rate = mCachedRates.getRates().get(position).getRate();
+                double rate = cachedRates.getRates().get(position).getRate();
 
                 // set rate
-                rowView.setRate(String.valueOf(mBaseRate * rate));
+                rowView.setRate(String.valueOf(baseRate * rate));
             }
         }
     }
 
     @Override
     public void setUpdateStatus(boolean updating) {
-        mUpdating = updating;
+        isUpdating = updating;
     }
 
     @Override
     public int getCurrenciesCount() {
-        if (mCachedRates == null || mCachedRates.getRates() == null) return 0;
-        return mCachedRates.getRates().size();
+        if (cachedRates == null || cachedRates.getRates() == null) return 0;
+        return cachedRates.getRates().size();
     }
 
     @Override
     public void setNewBaseRateFromUserInput(String newRate) {
         if (newRate == null || newRate.length() == 0) {
-            mBaseRate = 1;
+            baseRate = 1;
             return;
         }
 
         try {
-            mBaseRate = Double.parseDouble(newRate);
+            baseRate = Double.parseDouble(newRate);
         } catch (Exception e) {
             e.printStackTrace();
-            mBaseRate = 1;
+            baseRate = 1;
         }
 
-        mCachedRates.getRates().get(0).setRate(mBaseRate);
+        cachedRates.getRates().get(0).setRate(baseRate);
     }
 
     @Override
     public void switchBaseCurrency(int position) {
 
         // null check
-        if (mCachedRates == null || mCachedRates.getRates() == null) return;
+        if (cachedRates == null || cachedRates.getRates() == null) return;
 
         // set updating list status to true
         setUpdateStatus(true);
 
         // scroll list back to the top
-        mView.scrollBackToTop();
+        view.scrollBackToTop();
 
         // get selected new base currency
-        Rate selected = mCachedRates.getRates().get(position);
+        Rate selected = cachedRates.getRates().get(position);
 
         // maintain rate shown on screen
-        selected.setRate(selected.getRate() * mBaseRate);
+        selected.setRate(selected.getRate() * baseRate);
 
         // reorder list
         FxRates rates = new FxRates();
         rates.setBase(selected.getName());
-        rates.setDate(mCachedRates.getDate());
+        rates.setDate(cachedRates.getDate());
         rates.getRates().clear();
-        rates.getRates().addAll(mCachedRates.getRates());
+        rates.getRates().addAll(cachedRates.getRates());
         rates.getRates().remove(selected);
         rates.getRates().add(0, selected);
 
         // update new base rate
-        mBaseRate = selected.getRate();
+        baseRate = selected.getRate();
 
         // show new list order
-        mView.showNewRates(rates, mCachedRates, false);
+        view.showNewRates(rates, cachedRates, false);
 
         // get latest fx rates for new base currency
         getLatestFxRates(selected.getName());
