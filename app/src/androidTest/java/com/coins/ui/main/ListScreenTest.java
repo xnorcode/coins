@@ -32,19 +32,13 @@ public class ListScreenTest {
 
 
     @Test
-    public void showAndEditRatesList() throws InterruptedException {
+    public void showAndEditRatesList() {
 
         // verify list is shown
         onView(withId(R.id.recyclerView)).check(matches(isDisplayed()));
 
-        // 2sec delay for UI to load
-        Thread.sleep(2000);
-
         // make sure we are at the top of the list
         onView(withId(R.id.recyclerView)).perform(swipeDown());
-
-        // 0.5sec delay for scroll
-        Thread.sleep(500);
 
         // verify items are shown
         onView(withText("EUR")).check(matches(isDisplayed()));
@@ -53,20 +47,11 @@ public class ListScreenTest {
         // scroll to bottom of the list
         onView(withId(R.id.recyclerView)).perform(swipeUp());
 
-        // 2sec delay to load changes
-        Thread.sleep(2000);
-
         // click on HUF item to swap currency
         onView(withText("HUF")).perform(click());
 
-        // 2sec delay to load changes
-        Thread.sleep(2000);
-
         // make sure we are at the top of the list
         onView(withId(R.id.recyclerView)).perform(swipeDown());
-
-        // 2sec delay to load changes
-        Thread.sleep(2000);
 
         // verify HUF is at the top fo the list
         onView(withText("HUF")).check(matches(isDisplayed()));
