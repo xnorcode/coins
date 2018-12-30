@@ -122,7 +122,8 @@ public class MainRecyclerAdapter extends RecyclerView.Adapter<MainRecyclerAdapte
 
                 // set edit text change listener to update base rate
                 Disposable disText = RxTextView.textChangeEvents(vh.rate)
-                        .debounce(200, TimeUnit.MILLISECONDS)
+                        .debounce(300, TimeUnit.MILLISECONDS)
+                        .filter(text -> !text.text().toString().isEmpty())
                         .subscribeOn(schedulersProvider.io())
                         .observeOn(schedulersProvider.ui())
                         .subscribe(rate -> presenter.setNewBaseRateFromUserInput(rate.text().toString()),
